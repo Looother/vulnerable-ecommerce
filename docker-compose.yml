@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # 1. Servidor Web (E-commerce) - Expuesto al exterior
+  ecommerce-web:
+    build: ./web
+    container_name: ecommerce-web
+    restart: always
+    ports:
+      - "80:80" # Expuesto al host de Azure (vulnerable a Wireshark por usar HTTP plano)
+    networks:
+      - red_publica
+      - red_privada
+    depends_on:
+      - db-server
+    volumes:
+      - ./web/src:/var/www/html/src
+      - ./web/package.json:/var/www/html/package.json
+
+  # 2. Servidor de Base de Datos - Aislado de Internet
+  db-server:
+    image: mariadb:10.6
+    container_name: db-server
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "SuperSecureRootPassword123!"
+      MYSQL_DATABASE: "ecommerce"
+      MYSQL_USER: "dbuser"
+      MYSQL_PASSWORD: "cinvestav123" # Credencial débil reutilizada
+    networks:
+      - red_privada
+    # NOTA: No tiene la directiva "ports", impidiendo acceso directo desde fuera.
+
+  # 3. Servidor de Correos con SSH - Aislado de Internet (Objetivo del movimiento horizontal)
+  mail-server:
+    image: lscr.io/linuxserver/openssh-server:latest
+    container_name: mail-server
+    restart: always
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: America/Mexico_City
+      USER_NAME: mailadmin
+      USER_PASSWORD: "cinvestav123" # Reutilización de credenciales (Fallo de seguridad)
+      PASSWORD_ACCESS: "true"
+    networks:
+      - red_privada
+    # NOTA: Tampoco expone puertos al exterior. Solo accesible desde la red interna.
+
+networks:
+  red_publica:
+    driver: bridge
+  red_privada:
+    driver: bridge
