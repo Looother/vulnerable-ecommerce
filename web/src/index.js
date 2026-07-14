@@ -2,21 +2,16 @@ const express = require('express');
 const mysql = require('mysql2/promise');
 const path = require('path');
 const fs = require('fs');
-const serveIndex = require('serve-index');
 const adminRoutes = require('./admin');
 
 // Load environment variables
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// Enable directory listing (like Options +Indexes in Apache)
-// This will allow enumerating the contents of the src directory including .env
-app.use('/', express.static(__dirname), serveIndex(__dirname, { icons: true, view: 'details' }));
 
 // Database connection pool setup
 let pool;
@@ -186,14 +181,7 @@ app.get('/search', async (req, res) => {
 // Admin Panel Mount point
 app.use('/admin', adminRoutes);
 
-// Root path redirects to search or allows directory listing depending on context
-app.get('/', (req, res, next) => {
-  // If the user requests index.html or specifically wants the app homepage:
-  if (req.query.browse === 'true') {
-    return next(); // pass to serveIndex
-  }
-  res.redirect('/search');
-});
+// Note: Since Apache handles directory listing for /, we don't handle GET / in Node.js.
 
 // Start initialization and server
 initDb().then(() => {

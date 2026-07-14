@@ -25,8 +25,8 @@ graph TD
 ```
 
 ### Contenedores y Funciones:
-1. **`ecommerce-web`** (Node.js/Express): 
-   - Expuesto en el puerto 80 del host.
+1. **`ecommerce-web`** (Apache & Node.js/Express): 
+   - Expuesto en el puerto 80 del host usando Apache como proxy inverso para la app Node.js (corriendo internamente en el puerto 3000).
    - Actúa como la puerta de entrada a la red privada.
 2. **`db-server`** (MariaDB):
    - Aislado completamente de la red pública.
@@ -53,8 +53,8 @@ El entorno incluye deliberadamente los siguientes fallos de seguridad comunes:
 - **Vector de explotación**: El alumno puede inyectar sentencias SQL para extraer datos de la tabla de usuarios u omitir la lógica de búsqueda.
 
 ### C. Exposición de Credenciales y Mala Configuración (CWE-538 / CWE-200)
-- El servidor Node.js tiene habilitada la visualización del contenido de la carpeta `/src` a través del middleware `serve-index`, simulando la mala configuración `Options +Indexes` de Apache.
-- Un archivo `.env` conteniendo credenciales críticas está almacenado directamente dentro del directorio de código web expuesto (`/src/.env`), permitiendo que cualquier usuario web lo lea mediante navegación simple.
+- El servidor Apache tiene habilitado el listado de directorios mediante la directiva `Options +Indexes` en DocumentRoot (`/var/www/html/src`).
+- Un archivo `.env` conteniendo credenciales críticas está almacenado directamente dentro del directorio expuesto, permitiendo que cualquier usuario web lo lea mediante navegación directa a `http://localhost/.env`.
 
 ### D. Escalada de Privilegios Local mediante SUID (CWE-269)
 - En el Dockerfile del contenedor web, se establece intencionalmente el bit SUID en el binario del sistema `find`:
@@ -83,8 +83,9 @@ docker compose up --build -d
 
 ### Verificación del entorno:
 - **Buscador de productos**: Ingrese a [http://localhost/search](http://localhost/search).
-- **Lectura de archivo sensible**: Ingrese a [http://localhost/src/.env](http://localhost/src/.env) para verificar la filtración del archivo de configuración.
-- **Inyección SQL**: En la caja de búsqueda, ingrese `' UNION SELECT 1, username, password FROM users -- ` para obtener los datos de la base de datos.
+- **Lectura de archivo sensible**: Ingrese a [http://localhost/.env](http://localhost/.env) para verificar la filtración del archivo de configuración.
+- **Listado de directorios (Apache Indexes)**: Ingrese a [http://localhost/](http://localhost/) para observar el listado del directorio raíz de Apache.
+- **Inyección SQL**: En la caja de búsqueda, ingrese `' UNION SELECT 1, username, password, 9.99 FROM users -- ` para obtener los datos de la base de datos de manera balanceada.
 - **Acceso por SSH (Movimiento Lateral)**: Ejecute un shell dentro del contenedor web y conéctese al servidor de correo:
   ```bash
   docker exec -it ecommerce-web bash

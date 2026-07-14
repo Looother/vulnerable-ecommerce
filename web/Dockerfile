@@ -1,31 +1,35 @@
 FROM node:18-bullseye
 
-# Install maria-db client (useful for the lab to test connection) and other utilities
+# Install apache2, mariadb-client, and sudo
 RUN apt-get update && apt-get install -y \
+    apache2 \
     mariadb-client \
+    sudo \
     && rm -rf /var/lib/apt/lists/*
 
-# Set SUID permission on /usr/bin/find to allow privilege escalation from node to root
+# Enable proxy and proxy_http modules in Apache
+RUN a2enmod proxy proxy_http
+
+# Copy custom Apache VirtualHost configuration
+COPY apache-vhost.conf /etc/apache2/sites-available/000-default.conf
+
+# Set SUID permission on /usr/bin/find to allow privilege escalation to root
 RUN chmod u+s /usr/bin/find
 
 WORKDIR /var/www/html
 
-# Copy package files
+# Copy package files and install dependencies
 COPY package.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy source code (though docker-compose mounts it, we copy for completeness)
+# Copy source code (though docker-compose overrides it, we copy for consistency)
 COPY src/ ./src/
 
-# Change ownership of the app files to the node user
-RUN chown -R node:node /var/www/html
+# Change ownership of /var/www/html so the apache user (www-data) can read/write if necessary
+RUN chown -R www-data:www-data /var/www/html
 
-# Expose port 80
+# Expose port 80 (Apache)
 EXPOSE 80
 
-# Run the application as the non-root 'node' user so SUID privilege escalation can be practiced
-USER node
-
-CMD ["npm", "start"]
+# Entrypoint to start Apache in background as root, then start Node.js app as www-data
+CMD service apache2 start && su -s /bin/bash www-data -c "node src/index.js"
