@@ -348,8 +348,10 @@ router.post('/register', async (req, res) => {
     });
 
     const query = `INSERT INTO users (username, password) VALUES ('${username}', '${password}')`;
-    await pool.query(query);
+    const [result] = await pool.query(query);
     await pool.end();
+
+    const userId = result.insertId;
 
     res.send(`
       <!DOCTYPE html>
@@ -360,14 +362,19 @@ router.post('/register', async (req, res) => {
           <style>
               body { font-family: "Amazon Ember", sans-serif; background-color: #eaeded; text-align: center; padding: 50px; }
               .card { background: white; border: 1px solid #ddd; padding: 40px; max-width: 400px; margin: auto; border-radius: 4px; }
-              a { display: inline-block; margin-top: 20px; text-decoration: none; background: #ffd814; border: 1px solid #fcd200; padding: 10px 20px; border-radius: 100px; color: black; font-weight: 500; }
+              a { display: inline-block; margin-top: 15px; text-decoration: none; padding: 10px 20px; border-radius: 100px; font-weight: 500; font-size: 0.9rem; }
+              .btn-primary { background: #ffd814; border: 1px solid #fcd200; color: black; }
+              .btn-secondary { background: #f0f2f2; border: 1px solid #d5d9d9; color: black; margin-left: 10px; }
           </style>
       </head>
       <body>
           <div class="card">
               <h2 style="color: #007600;">✓ Cuenta Creada Exitosamente</h2>
               <p>Tu usuario <strong>${username}</strong> ha sido registrado en la base de datos de AmazonLab.</p>
-              <a href="/admin/login">Iniciar Sesión</a>
+              <div style="margin-top: 25px;">
+                  <a href="/user/dashboard?id=${userId}" class="btn-primary">Ir a mi Cuenta</a>
+                  <a href="/admin/login" class="btn-secondary">Iniciar Sesión</a>
+              </div>
           </div>
       </body>
       </html>
@@ -399,6 +406,11 @@ router.post('/login', async (req, res) => {
     await pool.end();
 
     if (rows.length > 0) {
+      const user = rows[0];
+      if (user.role !== 'admin') {
+        return res.redirect(`/user/dashboard?id=${user.id}`);
+      }
+
       res.send(`
         <!DOCTYPE html>
         <html lang="es">

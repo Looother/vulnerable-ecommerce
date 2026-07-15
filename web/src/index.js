@@ -60,24 +60,25 @@ async function initDb() {
       `);
       console.log('Database seeded with Amazon-like products.');
 
+      // Drop users table to ensure schema updates
+      await connection.query('DROP TABLE IF EXISTS users;');
+
       // Create users table
       await connection.query(`
         CREATE TABLE IF NOT EXISTS users (
           id INT AUTO_INCREMENT PRIMARY KEY,
           username VARCHAR(255) NOT NULL UNIQUE,
-          password VARCHAR(255) NOT NULL
+          password VARCHAR(255) NOT NULL,
+          role VARCHAR(50) DEFAULT 'user'
         );
       `);
 
       // Seed admin credentials
-      const [userRows] = await connection.query('SELECT COUNT(*) as count FROM users');
-      if (userRows[0].count === 0) {
-        await connection.query(`
-          INSERT INTO users (username, password) VALUES
-          ('admin', 'cinvestav123');
-        `);
-        console.log('Database seeded with admin user.');
-      }
+      await connection.query(`
+        INSERT INTO users (username, password, role) VALUES
+        ('admin', 'cinvestav123', 'admin');
+      `);
+      console.log('Database seeded with admin user.');
 
       await connection.end();
       
@@ -384,8 +385,12 @@ app.get('/', async (req, res) => {
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                       </button>
                   </form>
-                  <div class="nav-right">
-                      <a href="/admin/login">Mi Cuenta</a>
+                  <div class="nav-right" style="display: flex; gap: 15px; align-items: center;">
+                      <a href="/admin/login" style="color: white; text-decoration: none;">Mi Cuenta</a>
+                      <a href="/cart" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#febd69" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                          Carrito <span id="cart-count" style="background-color: #f08804; color: black; padding: 2px 6px; border-radius: 50%; font-size: 0.8rem; font-weight: bold;">0</span>
+                      </a>
                   </div>
               </div>
           </header>
@@ -459,6 +464,14 @@ app.get('/', async (req, res) => {
     html += `
               </div>
           </div>
+          <script>
+              document.addEventListener("DOMContentLoaded", () => {
+                  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+                  const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+                  const countEl = document.getElementById("cart-count");
+                  if (countEl) countEl.textContent = count;
+              });
+          </script>
       </body>
       </html>
     `;
@@ -807,8 +820,12 @@ app.get('/product/:id', async (req, res) => {
                           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                       </button>
                   </form>
-                  <div class="nav-right">
-                      <a href="/admin/login" style="color: white; text-decoration: none;">Mi Cuenta</a>
+                  <div class="nav-right" style="display: flex; gap: 15px; align-items: center;">
+                       <a href="/admin/login" style="color: white; text-decoration: none;">Mi Cuenta</a>
+                       <a href="/cart" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#febd69" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                           Carrito <span id="cart-count" style="background-color: #f08804; color: black; padding: 2px 6px; border-radius: 50%; font-size: 0.8rem; font-weight: bold;">0</span>
+                       </a>
                   </div>
               </div>
           </header>
@@ -844,13 +861,30 @@ app.get('/product/:id', async (req, res) => {
                   <span class="price">$${product.price}</span>
                   <span style="font-size: 0.9rem; color: #565959;">Envío GRATIS disponible.</span>
                   <div class="availability">Disponible.</div>
-                  <form action="/checkout" method="GET" style="width: 100%;">
-                      <input type="hidden" name="productId" value="${product.id}">
-                      <button type="submit" class="buy-btn" style="margin-bottom: 10px;">Agregar al Carrito</button>
-                      <button type="submit" class="buy-now-btn">Comprar Ahora</button>
-                  </form>
+                  <button onclick="addToCart(${product.id})" class="buy-btn" style="margin-bottom: 10px; font-family: inherit; width: 100%;">Agregar al Carrito</button>
+                  <a href="/checkout?productId=${product.id}" class="buy-now-btn" style="text-decoration: none; display: block; text-align: center; line-height: 38px; box-sizing: border-box; height: 40px; font-family: inherit; width: 100%;">Comprar Ahora</a>
               </div>
           </div>
+          <script>
+              function addToCart(productId) {
+                  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+                  const existingItem = cart.find(item => item.id === productId);
+                  if (existingItem) {
+                      existingItem.quantity += 1;
+                  } else {
+                      cart.push({ id: productId, quantity: 1 });
+                  }
+                  localStorage.setItem("cart", JSON.stringify(cart));
+                  window.location.href = "/cart";
+              }
+              
+              document.addEventListener("DOMContentLoaded", () => {
+                  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+                  const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+                  const countEl = document.getElementById("cart-count");
+                  if (countEl) countEl.textContent = count;
+              });
+          </script>
       </body>
       </html>
     `);
@@ -1332,6 +1366,466 @@ app.get('/status', (req, res) => {
     console.error("FATAL: Buffer overflow triggered in legacy_status. System crashing...");
     process.exit(1);
   }
+});
+
+// API to get products by ID list (for cart details rendering)
+app.get('/api/products', async (req, res) => {
+  const idsParam = req.query.ids || '';
+  if (!idsParam) {
+    return res.json([]);
+  }
+  const ids = idsParam.split(',').map(id => parseInt(id)).filter(id => !isNaN(id));
+  if (ids.length === 0) {
+    return res.json([]);
+  }
+  try {
+    if (!pool) {
+      return res.status(500).json({ error: 'Database not ready' });
+    }
+    // Vulnerable query (direct concatenation in IN clause)
+    const [results] = await pool.query(`SELECT * FROM products WHERE id IN (${ids.join(',')})`);
+    res.json(results);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// User Dashboard (Vulnerable to IDOR: takes ?id=<userId> without authorization check)
+app.get('/user/dashboard', async (req, res) => {
+  const id = req.query.id;
+  if (!id) {
+    return res.status(400).send("Falta el ID del usuario.");
+  }
+  try {
+    if (!pool) {
+      return res.status(500).send("Database not ready");
+    }
+    // Vulnerable query (direct concatenation of ID)
+    const sql = `SELECT id, username, role FROM users WHERE id = ${id}`;
+    const [rows] = await pool.query(sql);
+    
+    if (rows.length === 0) {
+      return res.status(404).send("Usuario no encontrado.");
+    }
+    const user = rows[0];
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <title>Mi Cuenta - AmazonLab</title>
+          <style>
+              body {
+                  font-family: "Amazon Ember", Arial, sans-serif;
+                  margin: 0;
+                  padding: 0;
+                  background-color: #eaeded;
+                  color: #0f1111;
+              }
+              header {
+                  background-color: #131921;
+                  padding: 10px 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  height: 40px;
+              }
+              .logo {
+                  color: white;
+                  font-size: 1.5rem;
+                  font-weight: 700;
+                  text-decoration: none;
+              }
+              .logo span {
+                  color: #febd69;
+              }
+              .nav-right a {
+                  color: white;
+                  text-decoration: none;
+                  font-size: 0.9rem;
+              }
+              .nav-sub {
+                  background-color: #232f3e;
+                  padding: 8px 20px;
+                  font-size: 0.9rem;
+              }
+              .nav-sub a {
+                  color: #eeeeee;
+                  text-decoration: none;
+              }
+              .main-container {
+                  max-width: 800px;
+                  margin: 40px auto;
+                  padding: 0 20px;
+              }
+              .card {
+                  background-color: white;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  padding: 30px;
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+              }
+              h1 {
+                  color: #111;
+                  margin: 0 0 20px 0;
+                  font-size: 1.8rem;
+                  font-weight: 400;
+              }
+              .user-details {
+                  background: #fdf6ec;
+                  padding: 20px;
+                  border-left: 4px solid #ff9900;
+                  border-radius: 4px;
+                  font-family: monospace;
+                  margin: 20px 0;
+                  border-top: 1px solid #f5dab1;
+                  border-right: 1px solid #f5dab1;
+                  border-bottom: 1px solid #f5dab1;
+                  font-size: 1rem;
+              }
+              .user-details div {
+                  margin-bottom: 10px;
+              }
+              .user-details code {
+                  background-color: #eee;
+                  padding: 2px 5px;
+                  border-radius: 3px;
+              }
+              .action-links {
+                  display: flex;
+                  gap: 15px;
+                  margin-top: 25px;
+              }
+              .action-links a {
+                  text-decoration: none;
+                  font-size: 0.9rem;
+                  font-weight: 500;
+                  text-align: center;
+              }
+              .action-links a.btn-primary {
+                  background-color: #ffd814;
+                  border: 1px solid #fcd200;
+                  border-radius: 100px;
+                  padding: 10px 20px;
+                  color: #0f1111;
+                  box-shadow: 0 2px 5px rgba(213,217,217,.5);
+                  transition: background-color 0.1s;
+              }
+              .action-links a.btn-primary:hover {
+                  background-color: #f7ca00;
+              }
+          </style>
+      </head>
+      <body>
+          <header>
+              <a href="/" class="logo">amazon<span>lab</span></a>
+              <div class="nav-right">
+                  <a href="/">Volver a la tienda</a>
+              </div>
+          </header>
+          <div class="nav-sub">
+              <a href="/">&larr; Catálogo Principal</a>
+          </div>
+          
+          <div class="main-container">
+              <div class="card">
+                  <h1>Mi Cuenta (Área de Cliente)</h1>
+                  <p>Bienvenido a tu panel de cliente, <strong>${user.username}</strong>.</p>
+                  
+                  <div class="user-details">
+                      <div><strong>ID de Usuario:</strong> <code>${user.id}</code></div>
+                      <div><strong>Nombre de Usuario:</strong> <code>${user.username}</code></div>
+                      <div><strong>Rol del Sistema:</strong> <code>${user.role}</code></div>
+                  </div>
+                  
+                  <p style="font-size: 0.9rem; color: #565959;">
+                      * Nota de seguridad educativa: Esta página utiliza parámetros de identificación directos sin autenticación basada en sesión. Modificar el parámetro ID de la URL permite comprobar fallos de tipo IDOR.
+                  </p>
+                  
+                  <div class="action-links">
+                      <a href="/" class="btn-primary">Volver al catálogo</a>
+                      <a href="/admin/login" style="margin-left: auto; color: #007185; text-decoration: none; font-size: 0.95rem; align-self: center;">Cerrar Sesión</a>
+                  </div>
+              </div>
+          </div>
+      </body>
+      </html>
+    `);
+  } catch (err) {
+    res.status(500).send("Error al cargar el panel de usuario: " + err.message);
+  }
+});
+
+// Shopping Cart Page (GET /cart)
+app.get('/cart', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Carrito de Compras - AmazonLab</title>
+        <style>
+            body {
+                font-family: "Amazon Ember", Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #eaeded;
+                color: #0f1111;
+            }
+            header {
+                background-color: #131921;
+                padding: 10px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 40px;
+            }
+            .logo {
+                color: white;
+                font-size: 1.5rem;
+                font-weight: 700;
+                text-decoration: none;
+            }
+            .logo span {
+                color: #febd69;
+            }
+            .nav-right a {
+                color: white;
+                text-decoration: none;
+                font-size: 0.9rem;
+            }
+            .nav-sub {
+                background-color: #232f3e;
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+            .nav-sub a {
+                color: #eeeeee;
+                text-decoration: none;
+            }
+            .main-container {
+                max-width: 1100px;
+                margin: 30px auto;
+                padding: 0 20px;
+                display: flex;
+                gap: 25px;
+            }
+            .cart-main {
+                flex: 3;
+                background-color: white;
+                padding: 30px;
+                border-radius: 4px;
+                border: 1px solid #ddd;
+            }
+            .cart-sidebar {
+                flex: 1;
+                background-color: white;
+                padding: 20px;
+                border-radius: 4px;
+                border: 1px solid #ddd;
+                height: fit-content;
+            }
+            h2 {
+                margin-top: 0;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 15px;
+                font-size: 1.7rem;
+                font-weight: 400;
+            }
+            .cart-item {
+                display: flex;
+                padding: 20px 0;
+                border-bottom: 1px solid #ddd;
+                gap: 20px;
+            }
+            .item-image {
+                width: 100px;
+                height: 100px;
+                object-fit: contain;
+            }
+            .item-details {
+                flex: 2;
+            }
+            .item-title {
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin-bottom: 5px;
+            }
+            .item-price {
+                color: #B12704;
+                font-weight: 700;
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+            .item-actions {
+                display: flex;
+                gap: 15px;
+                align-items: center;
+                font-size: 0.85rem;
+            }
+            .item-actions select {
+                padding: 4px;
+                border-radius: 3px;
+                border: 1px solid #bbb;
+                background: #f0f2f2;
+                box-shadow: 0 2px 5px rgba(213,217,217,.5);
+            }
+            .btn-delete {
+                color: #007185;
+                cursor: pointer;
+            }
+            .btn-delete:hover {
+                text-decoration: underline;
+                color: #c45500;
+            }
+            .subtotal-row {
+                text-align: right;
+                font-size: 1.2rem;
+                margin-top: 20px;
+            }
+            .subtotal-price {
+                font-weight: 700;
+                color: #B12704;
+            }
+            .btn-checkout {
+                display: block;
+                width: 100%;
+                padding: 12px 0;
+                background-color: #ffd814;
+                border: 1px solid #fcd200;
+                border-radius: 100px;
+                font-size: 0.95rem;
+                font-weight: 500;
+                cursor: pointer;
+                text-align: center;
+                text-decoration: none;
+                color: black;
+                box-shadow: 0 2px 5px rgba(213,217,217,.5);
+                transition: background-color 0.1s;
+                margin-top: 15px;
+            }
+            .btn-checkout:hover {
+                background-color: #f7ca00;
+            }
+            .empty-cart {
+                text-align: center;
+                padding: 50px 0;
+                color: #565959;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <a href="/" class="logo">amazon<span>lab</span></a>
+            <div class="nav-right">
+                <a href="/">Volver a la tienda</a>
+            </div>
+        </header>
+        <div class="nav-sub">
+            <a href="/">&larr; Catálogo Principal</a>
+        </div>
+        
+        <div class="main-container">
+            <div class="cart-main">
+                <h2>Carrito de Compras</h2>
+                <div id="cart-items-container">
+                    <p style="text-align: center; color: #565959; padding: 20px;">Cargando carrito de compras...</p>
+                </div>
+            </div>
+            
+            <div class="cart-sidebar" id="cart-summary" style="display: none;">
+                <div style="font-size: 1.1rem; margin-bottom: 10px;">Subtotal (<span id="summary-count">0</span> productos):</div>
+                <div style="font-size: 1.4rem; font-weight: 700; color: #B12704; margin-bottom: 20px;" id="summary-price">$0.00</div>
+                <a href="#" id="checkout-link" class="btn-checkout">Proceder al Pago</a>
+            </div>
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", async () => {
+                const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+                const container = document.getElementById("cart-items-container");
+                const summary = document.getElementById("cart-summary");
+                
+                if (cart.length === 0) {
+                    container.innerHTML = '<div class="empty-cart"><h3>Tu carrito de AmazonLab está vacío.</h3><p style="margin-top: 10px;"><a href="/" style="color: #007185; text-decoration: none;">Ir a comprar productos ahora</a></p></div>';
+                    summary.style.display = "none";
+                    return;
+                }
+                
+                const ids = cart.map(item => item.id).join(",");
+                try {
+                    const response = await fetch('/api/products?ids=' + ids);
+                    const products = await response.json();
+                    
+                    let html = "";
+                    let subtotal = 0;
+                    let totalItems = 0;
+                    
+                    cart.forEach(cartItem => {
+                        const product = products.find(p => p.id === cartItem.id);
+                        if (!product) return;
+                        
+                        const itemPrice = parseFloat(product.price);
+                        const itemTotal = itemPrice * cartItem.quantity;
+                        subtotal += itemTotal;
+                        totalItems += cartItem.quantity;
+                        
+                        const imageSrc = product.image ? (product.image.startsWith("http") ? product.image : "/" + product.image) : "/images/herramienta_truper.jpg";
+                        
+                        html += \'<div class="cart-item">\' +
+                                \'<img src="\' + imageSrc + \'" class="item-image" alt="\' + product.name + \'">\' +
+                                \'<div class="item-details">\' +
+                                    \'<div class="item-title">\' + product.name + \'</div>\' +
+                                    \'<div class="item-price">$\' + product.price + \'</div>\' +
+                                    \'<div class="item-actions">\' +
+                                        \'<span>Cantidad:</span> \' +
+                                        \'<select onchange="updateQuantity(\' + product.id + \', this.value)">\' +
+                                            [1,2,3,4,5,6,7,8,9,10].map(q => 
+                                                \'<option value="\' + q + \'"\' + (q === cartItem.quantity ? \' selected\' : \'\') + \'>\' + q + \'</option>\'
+                                            ).join("") +
+                                        \'</select>\' +
+                                        \'<span class="btn-delete" style="margin-left: 15px;" onclick="deleteItem(\' + product.id + \')">Eliminar</span>\' +
+                                    \'</div>\' +
+                                \'</div>\' +
+                            \'</div>\';
+                    });
+                    
+                    container.innerHTML = html;
+                    summary.style.display = "block";
+                    document.getElementById("summary-count").textContent = totalItems;
+                    document.getElementById("summary-price").textContent = "$" + subtotal.toFixed(2);
+                    
+                    if (cart.length > 0) {
+                        document.getElementById("checkout-link").href = "/checkout?productId=" + cart[0].id;
+                    }
+                    
+                } catch (err) {
+                    container.innerHTML = \'<p style="color: red; text-align: center;">Error al cargar productos: \' + err.message + \'</p>\';
+                }
+            });
+            
+            function updateQuantity(productId, newQty) {
+                let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+                cart = cart.map(item => {
+                    if (item.id === productId) {
+                        item.quantity = parseInt(newQty);
+                    }
+                    return item;
+                });
+                localStorage.setItem("cart", JSON.stringify(cart));
+                location.reload();
+            }
+            
+            function deleteItem(productId) {
+                let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+                cart = cart.filter(item => item.id !== productId);
+                localStorage.setItem("cart", JSON.stringify(cart));
+                location.reload();
+            }
+        </script>
+    </body>
+    </html>
+  `);
 });
 
 // Note: Since Apache handles directory listing for /, we don't handle GET / in Node.js.
