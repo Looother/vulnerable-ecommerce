@@ -5,7 +5,7 @@ services:
   ecommerce-web:
     build: ./web
     container_name: ecommerce-web
-    restart: always
+    restart: "no"
     ports:
       - "80:80" # Expuesto al host de Azure (vulnerable a Wireshark por usar HTTP plano)
     networks:

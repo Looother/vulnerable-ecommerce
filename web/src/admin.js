@@ -157,12 +157,224 @@ router.get('/login', (req, res) => {
                     </div>
                     <input type="submit" value="Continuar">
                 </form>
+                <div style="margin-top: 15px; text-align: center; font-size: 0.85rem;">
+                    ¿Eres nuevo en AmazonLab? <a href="/admin/register" style="color: #007185; text-decoration: none;">Crea tu cuenta aquí</a>
+                </div>
             </div>
             <a href="/" class="back-link">Volver al buscador de productos</a>
         </div>
     </body>
     </html>
   `);
+});
+
+// GET /admin/register - Servir formulario de registro
+router.get('/register', (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>AmazonLab - Crear Cuenta</title>
+        <style>
+            body {
+                font-family: "Amazon Ember", Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #eaeded;
+                color: #0f1111;
+            }
+            header {
+                background-color: #131921;
+                padding: 10px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 40px;
+            }
+            .logo {
+                color: white;
+                font-size: 1.5rem;
+                font-weight: 700;
+                text-decoration: none;
+            }
+            .logo span {
+                color: #febd69;
+            }
+            .nav-right a {
+                color: white;
+                text-decoration: none;
+                font-size: 0.9rem;
+            }
+            .nav-sub {
+                background-color: #232f3e;
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+            .nav-sub a {
+                color: #eeeeee;
+                text-decoration: none;
+            }
+            .login-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 40px;
+                padding: 0 20px;
+            }
+            .login-container {
+                background-color: #ffffff;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                padding: 30px;
+                width: 100%;
+                max-width: 350px;
+                box-sizing: border-box;
+            }
+            h2 {
+                margin: 0 0 20px 0;
+                font-size: 1.7rem;
+                font-weight: 400;
+            }
+            .form-group {
+                margin-bottom: 15px;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-size: 0.85rem;
+                font-weight: 700;
+            }
+            input[type="text"], input[type="password"] {
+                width: 100%;
+                padding: 8px 10px;
+                font-size: 0.95rem;
+                border: 1px solid #a6a6a6;
+                border-radius: 3px;
+                box-sizing: border-box;
+                outline: none;
+                transition: border-color 0.1s, box-shadow 0.1s;
+            }
+            input[type="text"]:focus, input[type="password"]:focus {
+                border-color: #e77600;
+                box-shadow: 0 0 3px 2px rgba(228,121,17,.5);
+            }
+            input[type="submit"] {
+                width: 100%;
+                padding: 10px 0;
+                font-size: 0.9rem;
+                background-color: #ffd814;
+                border: 1px solid #fcd200;
+                border-radius: 100px;
+                cursor: pointer;
+                font-family: inherit;
+                box-shadow: 0 2px 5px rgba(213,217,217,.5);
+                transition: background-color 0.1s;
+            }
+            input[type="submit"]:hover {
+                background-color: #f7ca00;
+            }
+            .back-link {
+                margin-top: 20px;
+                font-size: 0.9rem;
+                color: #007185;
+                text-decoration: none;
+            }
+            .back-link:hover {
+                color: #c45500;
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <a href="/" class="logo">amazon<span>lab</span></a>
+            <div class="nav-right">
+                <a href="/">Volver a la tienda</a>
+            </div>
+        </header>
+        <div class="nav-sub">
+            <a href="/admin/login">&larr; Volver al Login</a>
+        </div>
+        
+        <div class="login-wrapper">
+            <div class="login-container">
+                <h2>Crear cuenta</h2>
+                <form action="/admin/register" method="POST">
+                    <div class="form-group">
+                        <label for="username">Usuario para registro</label>
+                        <input type="text" id="username" name="username" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" name="password" required autocomplete="off">
+                    </div>
+                    <input type="submit" value="Crea tu cuenta de AmazonLab">
+                </form>
+            </div>
+            <a href="/" class="back-link">Volver al buscador de productos</a>
+        </div>
+    </body>
+    </html>
+  `);
+});
+
+// POST /admin/register - Procesar registro e invocar SUID para validar/desbordar
+router.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).send("Faltan parámetros.");
+  }
+
+  // 1. VULNERABILIDAD: Ejecutar el binario SUID con el nombre del usuario.
+  // Si 'username' supera los 64 bytes, provocará el desbordamiento de búfer en C.
+  try {
+    const { execSync } = require('child_process');
+    // Escapar comillas dobles para prevenir command injection básica en el shell,
+    // pero permitimos que el desbordamiento ocurra al pasarle el argumento directamente.
+    execSync(`/usr/local/bin/legacy_status "${username.replace(/"/g, '\\"')}"`);
+  } catch (err) {
+    console.error("FATAL: Buffer overflow triggered during registration in legacy_status. System crashing...");
+    process.exit(1);
+  }
+
+  // 2. VULNERABILIDAD: Registro válido usando concatenación SQL directa (SQL Injection en INSERT)
+  try {
+    const pool = mysql.createPool({
+      host: process.env.DB_HOST || 'db-server',
+      user: process.env.DB_USER || 'dbuser',
+      password: process.env.DB_PASSWORD || 'cinvestav123',
+      database: process.env.DB_NAME || 'ecommerce'
+    });
+
+    const query = `INSERT INTO users (username, password) VALUES ('${username}', '${password}')`;
+    await pool.query(query);
+    await pool.end();
+
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <title>Registro Exitoso - AmazonLab</title>
+          <style>
+              body { font-family: "Amazon Ember", sans-serif; background-color: #eaeded; text-align: center; padding: 50px; }
+              .card { background: white; border: 1px solid #ddd; padding: 40px; max-width: 400px; margin: auto; border-radius: 4px; }
+              a { display: inline-block; margin-top: 20px; text-decoration: none; background: #ffd814; border: 1px solid #fcd200; padding: 10px 20px; border-radius: 100px; color: black; font-weight: 500; }
+          </style>
+      </head>
+      <body>
+          <div class="card">
+              <h2 style="color: #007600;">✓ Cuenta Creada Exitosamente</h2>
+              <p>Tu usuario <strong>${username}</strong> ha sido registrado en la base de datos de AmazonLab.</p>
+              <a href="/admin/login">Iniciar Sesión</a>
+          </div>
+      </body>
+      </html>
+    `);
+  } catch (dbErr) {
+    res.status(500).send(`Error en base de datos al registrar: <pre>${dbErr.message}</pre>`);
+  }
 });
 
 // Handling login (POST request over plain HTTP)

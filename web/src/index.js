@@ -1317,6 +1317,23 @@ app.post('/checkout/pay', async (req, res) => {
 // Admin Panel Mount point
 app.use('/admin', adminRoutes);
 
+// Endpoint vulnerable to DoS/crash via legacy_status buffer overflow
+app.get('/status', (req, res) => {
+  const key = req.query.key || '';
+  const { execSync } = require('child_process');
+  
+  try {
+    // VULNERABLE: Direct execution of SUID C binary. If the input is too long,
+    // it crashes with SIGSEGV/SIGBUS. We catch the execution error and exit the Node process,
+    // crashing the server and container to simulate a successful Denial of Service (DoS).
+    const output = execSync(`/usr/local/bin/legacy_status "${key.replace(/"/g, '\\"')}"`);
+    res.send(`Estatus procesado: ${output.toString()}`);
+  } catch (err) {
+    console.error("FATAL: Buffer overflow triggered in legacy_status. System crashing...");
+    process.exit(1);
+  }
+});
+
 // Note: Since Apache handles directory listing for /, we don't handle GET / in Node.js.
 
 // Start initialization and server
