@@ -844,8 +844,11 @@ app.get('/product/:id', async (req, res) => {
                   <span class="price">$${product.price}</span>
                   <span style="font-size: 0.9rem; color: #565959;">Envío GRATIS disponible.</span>
                   <div class="availability">Disponible.</div>
-                  <button class="buy-btn">Agregar al Carrito</button>
-                  <button class="buy-now-btn">Comprar Ahora</button>
+                  <form action="/checkout" method="GET" style="width: 100%;">
+                      <input type="hidden" name="productId" value="${product.id}">
+                      <button type="submit" class="buy-btn" style="margin-bottom: 10px;">Agregar al Carrito</button>
+                      <button type="submit" class="buy-now-btn">Comprar Ahora</button>
+                  </form>
               </div>
           </div>
       </body>
@@ -875,6 +878,439 @@ app.get('/product/:id', async (req, res) => {
       </body>
       </html>
     `);
+  }
+});
+
+// Checkout Page - GET /checkout
+app.get('/checkout', async (req, res) => {
+  const productId = req.query.productId;
+  if (!productId) {
+    return res.redirect('/');
+  }
+
+  try {
+    if (!pool) {
+      return res.status(500).send('Database not initialized yet.');
+    }
+    const [results] = await pool.query('SELECT * FROM products WHERE id = ?', [productId]);
+    if (results.length === 0) {
+      return res.redirect('/');
+    }
+
+    const product = results[0];
+    const imageSrc = product.image ? (product.image.startsWith('http') ? product.image : `/${product.image}`) : '';
+
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <title>AmazonLab - Caja y Pago</title>
+          <style>
+              body {
+                  font-family: "Amazon Ember", Arial, sans-serif;
+                  margin: 0;
+                  padding: 0;
+                  background-color: #eaeded;
+                  color: #0f1111;
+              }
+              header {
+                  background-color: #131921;
+                  padding: 10px 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  height: 40px;
+              }
+              .logo {
+                  color: white;
+                  font-size: 1.5rem;
+                  font-weight: 700;
+                  text-decoration: none;
+              }
+              .logo span {
+                  color: #febd69;
+              }
+              .nav-right a {
+                  color: white;
+                  text-decoration: none;
+                  font-size: 0.9rem;
+              }
+              .nav-sub {
+                  background-color: #232f3e;
+                  padding: 8px 20px;
+                  font-size: 0.9rem;
+              }
+              .nav-sub a {
+                  color: #eeeeee;
+                  text-decoration: none;
+              }
+              .checkout-container {
+                  max-width: 1000px;
+                  margin: 30px auto;
+                  padding: 0 20px;
+                  display: flex;
+                  gap: 30px;
+              }
+              .checkout-main {
+                  flex: 2;
+                  background-color: #ffffff;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  padding: 30px;
+              }
+              .checkout-sidebar {
+                  flex: 1;
+                  background-color: #ffffff;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  padding: 20px;
+                  height: fit-content;
+              }
+              h2 {
+                  font-weight: 400;
+                  font-size: 1.7rem;
+                  margin-top: 0;
+                  border-bottom: 1px solid #ddd;
+                  padding-bottom: 10px;
+                  color: #c45500;
+              }
+              .section-title {
+                  font-size: 1.1rem;
+                  font-weight: 700;
+                  margin-bottom: 15px;
+                  color: #0f1111;
+              }
+              .form-group {
+                  margin-bottom: 15px;
+              }
+              label {
+                  display: block;
+                  margin-bottom: 5px;
+                  font-size: 0.85rem;
+                  font-weight: 700;
+              }
+              input[type="text"] {
+                  width: 100%;
+                  padding: 8px 10px;
+                  font-size: 0.95rem;
+                  border: 1px solid #a6a6a6;
+                  border-radius: 3px;
+                  box-sizing: border-box;
+                  outline: none;
+                  transition: border-color 0.1s, box-shadow 0.1s;
+              }
+              input[type="text"]:focus {
+                  border-color: #e77600;
+                  box-shadow: 0 0 3px 2px rgba(228,121,17,.5);
+              }
+              .form-row {
+                  display: flex;
+                  gap: 15px;
+              }
+              .form-row .form-group {
+                  flex: 1;
+              }
+              .product-summary {
+                  display: flex;
+                  gap: 20px;
+                  margin-bottom: 25px;
+                  border-bottom: 1px solid #eee;
+                  padding-bottom: 20px;
+              }
+              .product-img {
+                  width: 80px;
+                  height: 80px;
+                  object-fit: contain;
+                  border: 1px solid #eee;
+                  padding: 5px;
+                  border-radius: 4px;
+              }
+              .product-info h3 {
+                  margin: 0 0 5px 0;
+                  font-size: 1rem;
+                  font-weight: 600;
+              }
+              .product-price {
+                  color: #B12704;
+                  font-weight: 700;
+              }
+              .pay-btn {
+                  width: 100%;
+                  padding: 12px 0;
+                  background-color: #ffd814;
+                  border: 1px solid #fcd200;
+                  border-radius: 100px;
+                  font-size: 0.95rem;
+                  font-weight: 500;
+                  cursor: pointer;
+                  box-shadow: 0 2px 5px rgba(213,217,217,.5);
+                  font-family: inherit;
+                  transition: background-color 0.1s;
+              }
+              .pay-btn:hover {
+                  background-color: #f7ca00;
+              }
+              .price-summary {
+                  font-size: 0.95rem;
+                  margin-bottom: 15px;
+              }
+              .price-row {
+                  display: flex;
+                  justify-content: space-between;
+                  margin-bottom: 8px;
+              }
+              .total-row {
+                  font-size: 1.2rem;
+                  font-weight: 700;
+                  color: #B12704;
+                  border-top: 1px solid #eee;
+                  padding-top: 10px;
+                  margin-top: 10px;
+              }
+          </style>
+      </head>
+      <body>
+          <header>
+              <a href="/" class="logo">amazon<span>lab</span></a>
+              <div class="nav-right">
+                  <a href="/">Volver a la tienda</a>
+              </div>
+          </header>
+          <div class="nav-sub">
+              <a href="/product/${product.id}">&larr; Volver al Producto</a>
+          </div>
+
+          <div class="checkout-container">
+              <div class="checkout-main">
+                  <h2>Proceder al Pago</h2>
+                  
+                  <div class="product-summary">
+                      ${product.image ? 
+                        `<img class="product-img" src="${imageSrc}" alt="${product.name}">` : ''
+                      }
+                      <div class="product-info">
+                          <h3>${product.name}</h3>
+                          <span class="product-price">$${product.price}</span>
+                      </div>
+                  </div>
+
+                  <form action="/checkout/pay" method="POST">
+                      <input type="hidden" name="productId" value="${product.id}">
+                      
+                      <div class="section-title">Método de Pago (Tarjeta de Crédito o Débito)</div>
+                      
+                      <div class="form-group">
+                          <label for="cardName">Nombre impreso en la tarjeta</label>
+                          <input type="text" id="cardName" name="cardName" placeholder="Juan Pérez" required>
+                      </div>
+                      
+                      <div class="form-group">
+                          <label for="cardNumber">Número de tarjeta</label>
+                          <input type="text" id="cardNumber" name="cardNumber" placeholder="4111 2222 3333 4444" pattern="[0-9\\s]{13,19}" required>
+                      </div>
+                      
+                      <div class="form-row">
+                          <div class="form-group">
+                              <label for="cardExpiry">Fecha de vencimiento</label>
+                              <input type="text" id="cardExpiry" name="cardExpiry" placeholder="MM/AA" pattern="[0-9]{2}/[0-9]{2}" required>
+                          </div>
+                          
+                          <div class="form-group">
+                              <label for="cardCvv">CVV / Código de seguridad</label>
+                              <input type="text" id="cardCvv" name="cardCvv" placeholder="123" pattern="[0-9]{3,4}" required>
+                          </div>
+                      </div>
+
+                      <div style="margin-top: 30px;">
+                          <button type="submit" class="pay-btn">Confirmar y pagar pedido</button>
+                      </div>
+                  </form>
+              </div>
+
+              <div class="checkout-sidebar">
+                  <div class="section-title">Resumen del Pedido</div>
+                  <div class="price-summary">
+                      <div class="price-row">
+                          <span>Producto:</span>
+                          <span>$${product.price}</span>
+                      </div>
+                      <div class="price-row">
+                          <span>Envío y manejo:</span>
+                          <span style="color: #007600;">GRATIS</span>
+                      </div>
+                      <div class="price-row total-row">
+                          <span>Total del Pedido:</span>
+                          <span>$${product.price}</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </body>
+      </html>
+    `);
+  } catch (err) {
+    res.status(500).send(`Error en el checkout: ${err.message}`);
+  }
+});
+
+// Checkout Pay Action - POST /checkout/pay
+app.post('/checkout/pay', async (req, res) => {
+  const { productId, cardName, cardNumber, cardExpiry, cardCvv } = req.body;
+  if (!productId || !cardName || !cardNumber || !cardExpiry || !cardCvv) {
+    return res.redirect('/');
+  }
+
+  try {
+    if (!pool) {
+      return res.status(500).send('Database not initialized yet.');
+    }
+    const [results] = await pool.query('SELECT * FROM products WHERE id = ?', [productId]);
+    if (results.length === 0) {
+      return res.redirect('/');
+    }
+
+    const product = results[0];
+    const orderNumber = Math.floor(100000 + Math.random() * 900000);
+    
+    // Calculate an estimated delivery date (5 days from now)
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 5);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const deliveryDateStr = deliveryDate.toLocaleDateString('es-ES', options);
+
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+          <meta charset="UTF-8">
+          <title>AmazonLab - ¡Pedido Confirmado!</title>
+          <style>
+              body {
+                  font-family: "Amazon Ember", Arial, sans-serif;
+                  margin: 0;
+                  padding: 0;
+                  background-color: #eaeded;
+                  color: #0f1111;
+              }
+              header {
+                  background-color: #131921;
+                  padding: 10px 20px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  height: 40px;
+              }
+              .logo {
+                  color: white;
+                  font-size: 1.5rem;
+                  font-weight: 700;
+                  text-decoration: none;
+              }
+              .logo span {
+                  color: #febd69;
+              }
+              .nav-right a {
+                  color: white;
+                  text-decoration: none;
+                  font-size: 0.9rem;
+              }
+              .main-container {
+                  max-width: 650px;
+                  margin: 40px auto;
+                  padding: 0 20px;
+              }
+              .card {
+                  background-color: #ffffff;
+                  border: 1px solid #ddd;
+                  border-radius: 4px;
+                  padding: 40px;
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+              }
+              .success-header {
+                  display: flex;
+                  align-items: center;
+                  gap: 15px;
+                  margin-bottom: 25px;
+              }
+              .success-icon {
+                  color: #007600;
+                  font-size: 2.2rem;
+              }
+              h2 {
+                  color: #007600;
+                  font-weight: 400;
+                  margin: 0;
+                  font-size: 1.8rem;
+              }
+              p {
+                  color: #0f1111;
+                  font-size: 1rem;
+                  line-height: 1.5;
+                  margin-bottom: 15px;
+              }
+              .order-details {
+                  background-color: #f3f3f3;
+                  padding: 20px;
+                  border-radius: 4px;
+                  margin: 25px 0;
+                  font-size: 0.95rem;
+              }
+              .order-details div {
+                  margin-bottom: 8px;
+              }
+              .order-details div:last-child {
+                  margin-bottom: 0;
+              }
+              .btn-back {
+                  display: inline-block;
+                  padding: 12px 25px;
+                  background-color: #ffd814;
+                  border: 1px solid #fcd200;
+                  border-radius: 100px;
+                  color: #0f1111;
+                  text-decoration: none;
+                  font-weight: 500;
+                  font-size: 0.95rem;
+                  box-shadow: 0 2px 5px rgba(213,217,217,.5);
+                  transition: background-color 0.1s;
+              }
+              .btn-back:hover {
+                  background-color: #f7ca00;
+              }
+          </style>
+      </head>
+      <body>
+          <header>
+              <a href="/" class="logo">amazon<span>lab</span></a>
+              <div class="nav-right">
+                  <a href="/">Volver a la tienda</a>
+              </div>
+          </header>
+          
+          <div class="main-container">
+              <div class="card">
+                  <div class="success-header">
+                      <span class="success-icon">✓</span>
+                      <h2>¡Pedido Confirmado!</h2>
+                  </div>
+                  <p>Gracias por tu compra en AmazonLab. Se ha enviado un correo electrónico de confirmación con los detalles del pedido.</p>
+                  
+                  <div class="order-details">
+                      <div><strong>Número de Pedido:</strong> #${orderNumber}</div>
+                      <div><strong>Producto Adquirido:</strong> ${product.name}</div>
+                      <div><strong>Total Cobrado:</strong> $${product.price}</div>
+                      <div><strong>Fecha Estimada de Entrega:</strong> ${deliveryDateStr}</div>
+                  </div>
+
+                  <a href="/" class="btn-back">Continuar comprando</a>
+              </div>
+          </div>
+      </body>
+      </html>
+    `);
+  } catch (err) {
+    res.status(500).send(`Error procesando el pago: ${err.message}`);
   }
 });
 
