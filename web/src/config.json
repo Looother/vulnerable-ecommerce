@@ -1,0 +1,9 @@
+{
+    "DB_HOST": "db-server",
+    "DB_USER": "dbuser",
+    "DB_PASSWORD": "cinvestav123",
+    "DB_NAME": "ecommerce",
+    "PORT": "3000",
+    "MAIL_HOST": "mail-server",
+    "MAIL_USER": "mailadmin"
+}
