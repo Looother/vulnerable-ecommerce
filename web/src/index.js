@@ -145,7 +145,7 @@ async function initDb() {
 }
 
 // Vulnerable Search Endpoint (SQL Injection via direct string concatenation)
-app.get('/', async (req, res) => {
+app.get(['/', '/search'], async (req, res) => {
   const query = req.query.q || '';
   
   // Vulnerable Query Construction
@@ -1230,26 +1230,61 @@ app.get('/checkout', async (req, res) => {
   }
 });
 
-// Checkout Pay Action - POST /checkout/pay
+// Checkout Pay Action - POST /checkout/pay (Vulnerable to PNT-07 API Abuse & Business Logic Flaws)
 app.post('/checkout/pay', async (req, res) => {
-  const { productId, cardName, cardNumber, cardExpiry, cardCvv } = req.body;
-  if (!productId || !cardName || !cardNumber || !cardExpiry || !cardCvv) {
-    return res.redirect('/');
-  }
+  const { productId, cardName, cardNumber, cardExpiry, cardCvv, price, quantity, discountCode, currency } = req.body;
+  const pId = productId || '1';
 
   try {
-    if (!pool) {
-      return res.status(500).send('Database not initialized yet.');
-    }
-    const [results] = await pool.query('SELECT * FROM products WHERE id = ?', [productId]);
-    if (results.length === 0) {
-      return res.redirect('/');
+    let product = { id: pId, name: 'Producto de Prueba', price: '49.99' };
+    if (pool) {
+      const [results] = await pool.query('SELECT * FROM products WHERE id = ?', [pId]);
+      if (results.length > 0) {
+        product = results[0];
+      }
     }
 
-    const product = results[0];
+    // Vulnerable logic: Accepts client-supplied price and quantity without backend validation
+    const qtyNum = quantity !== undefined ? parseFloat(quantity) : 1;
+    const priceNum = price !== undefined ? parseFloat(price) : parseFloat(product.price);
+    const totalAmount = (priceNum * qtyNum).toFixed(2);
     const orderNumber = Math.floor(100000 + Math.random() * 900000);
-    
-    // Calculate an estimated delivery date (5 days from now)
+
+    // Audit log entry for business logic payment transaction
+    try {
+      if (pool) {
+        await pool.query(
+          'INSERT INTO system_audit_logs (user, ip_address, action, query) VALUES (?, ?, ?, ?)',
+          [
+            cardName || 'checkout_user',
+            req.ip || '127.0.0.1',
+            'BUSINESS_LOGIC_PAYMENT',
+            `Order #${orderNumber}: productId=${pId}, price=${priceNum}, quantity=${qtyNum}, total=$${totalAmount}, card=${cardNumber ? cardNumber.slice(-4) : 'N/A'}`
+          ]
+        );
+      }
+    } catch (auditErr) {
+      console.error("Audit log error during payment:", auditErr.message);
+    }
+
+    // Return JSON if requested via API client (Content-Type: application/json)
+    if (req.headers['content-type'] && req.headers['content-type'].includes('application/json')) {
+      return res.json({
+        status: 'success',
+        orderId: orderNumber,
+        message: '¡Pago procesado exitosamente!',
+        totalPaid: `$${totalAmount}`,
+        details: {
+          productId: pId,
+          productName: product.name,
+          unitPrice: priceNum,
+          quantity: qtyNum,
+          discountCode: discountCode || null,
+          currency: currency || 'USD'
+        }
+      });
+    }
+
     const deliveryDate = new Date();
     deliveryDate.setDate(deliveryDate.getDate() + 5);
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -1335,9 +1370,6 @@ app.post('/checkout/pay', async (req, res) => {
               .order-details div {
                   margin-bottom: 8px;
               }
-              .order-details div:last-child {
-                  margin-bottom: 0;
-              }
               .btn-back {
                   display: inline-block;
                   padding: 12px 25px;
@@ -1370,12 +1402,14 @@ app.post('/checkout/pay', async (req, res) => {
                       <span class="success-icon">✓</span>
                       <h2>¡Pedido Confirmado!</h2>
                   </div>
-                  <p>Gracias por tu compra en AmazonLab. Se ha enviado un correo electrónico de confirmación con los detalles del pedido.</p>
+                  <p>Gracias por tu compra en AmazonLab, <strong>${cardName || 'Cliente'}</strong>.</p>
                   
                   <div class="order-details">
                       <div><strong>Número de Pedido:</strong> #${orderNumber}</div>
                       <div><strong>Producto Adquirido:</strong> ${product.name}</div>
-                      <div><strong>Total Cobrado:</strong> $${product.price}</div>
+                      <div><strong>Cantidad Procesada:</strong> ${qtyNum}</div>
+                      <div><strong>Precio Aceptado por Unidad:</strong> $${priceNum}</div>
+                      <div><strong>Total Cobrado:</strong> <span style="color: #b12704; font-weight: bold;">$${totalAmount}</span></div>
                       <div><strong>Fecha Estimada de Entrega:</strong> ${deliveryDateStr}</div>
                   </div>
 
@@ -1865,6 +1899,89 @@ app.get('/cart', (req, res) => {
                 location.reload();
             }
         </script>
+    </body>
+    </html>
+  `);
+});
+
+// GET /checkout - Payment checkout form
+app.get('/checkout', async (req, res) => {
+  const productId = req.query.productId || '1';
+  let product = { id: productId, name: 'Producto de Prueba', price: '49.99' };
+  try {
+    if (pool) {
+      const [rows] = await pool.query('SELECT * FROM products WHERE id = ?', [productId]);
+      if (rows.length > 0) product = rows[0];
+    }
+  } catch (e) {}
+
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Confirmar y Pagar - AmazonLab</title>
+        <style>
+            body { font-family: "Amazon Ember", Arial, sans-serif; background-color: #eaeded; color: #0f1111; margin: 0; padding: 0; }
+            header { background-color: #131921; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; height: 40px; }
+            .logo { color: white; font-size: 1.5rem; font-weight: 700; text-decoration: none; }
+            .logo span { color: #febd69; }
+            .main-container { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+            .checkout-card { background: white; border: 1px solid #ddd; padding: 30px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+            h2 { margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 15px; font-weight: 400; font-size: 1.6rem; }
+            .form-group { margin-bottom: 15px; }
+            label { display: block; margin-bottom: 5px; font-weight: 700; font-size: 0.85rem; }
+            input[type="text"], input[type="number"] { width: 100%; padding: 8px 10px; border: 1px solid #a6a6a6; border-radius: 3px; box-sizing: border-box; font-family: inherit; }
+            .btn-pay { width: 100%; padding: 12px 0; background: #ffd814; border: 1px solid #fcd200; border-radius: 100px; font-size: 0.95rem; font-weight: 500; cursor: pointer; margin-top: 15px; }
+            .btn-pay:hover { background: #f7ca00; }
+            .product-summary { background: #fffdf9; border: 1px solid #f5dab1; border-left: 4px solid #febd69; padding: 15px; margin-bottom: 20px; border-radius: 4px; }
+        </style>
+    </head>
+    <body>
+        <header>
+            <a href="/" class="logo">amazon<span>lab</span></a>
+            <div style="color: white; font-size: 0.9rem;"><a href="/" style="color: white; text-decoration: none;">Volver a la tienda</a></div>
+        </header>
+        <div class="main-container">
+            <div class="checkout-card">
+                <h2>Confirmar y Pagar Pedido</h2>
+                <div class="product-summary">
+                    <div><strong>Producto:</strong> ${product.name}</div>
+                    <div><strong>Precio Original:</strong> $${product.price}</div>
+                </div>
+                <form action="/checkout/pay" method="POST">
+                    <input type="hidden" name="productId" value="${product.id}">
+                    
+                    <div class="form-group">
+                        <label for="price">Precio por Unidad (USD)</label>
+                        <input type="text" id="price" name="price" value="${product.price}">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Cantidad</label>
+                        <input type="number" id="quantity" name="quantity" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="cardName">Nombre en la tarjeta</label>
+                        <input type="text" id="cardName" name="cardName" value="Juan Pérez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardNumber">Número de tarjeta</label>
+                        <input type="text" id="cardNumber" name="cardNumber" value="4111222233334444" required>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cardExpiry">Expiración</label>
+                            <input type="text" id="cardExpiry" name="cardExpiry" value="12/26" required>
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="cardCvv">CVV</label>
+                            <input type="text" id="cardCvv" name="cardCvv" value="123" required>
+                        </div>
+                    </div>
+                    <input type="submit" class="btn-pay" value="Confirmar y pagar pedido">
+                </form>
+            </div>
+        </div>
     </body>
     </html>
   `);
