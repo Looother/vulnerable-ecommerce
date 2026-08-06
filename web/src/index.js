@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const adminRoutes = require('./admin');
 
+const session = require('express-session');
+
 // Load environment variables
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
@@ -12,6 +14,14 @@ const port = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(session({
+  secret: 'vulnerable-ecommerce-secret-key-12345',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 3600000 }
+}));
+
+app.use('/admin', adminRoutes);
 
 // Database connection pool setup
 let pool;

