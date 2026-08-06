@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y \
     sudo \
     gcc \
     make \
+    sshpass \
+    openssh-client \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable proxy and proxy_http modules in Apache
