@@ -992,9 +992,9 @@ router.post('/add-product', upload.single('image'), async (req, res) => {
                   <p>Nombre: <strong>${name}</strong></p>
                   <p>Archivo subido: <code>/uploads/${fileName}</code></p>
                   <div class="alert-info">
-                      <strong>Entorno de Laboratorio:</strong> Si subiste un script interactivo para realizar el movimiento lateral, puedes previsualizar su ejecución aquí:
+                      <strong>Vista Previa del Archivo:</strong> Puedes verificar o visualizar el recurso multimedia guardado en el servidor aquí:
                       <br><br>
-                      <a href="/admin/preview?file=${fileName}" target="_blank">Simular Ejecución de Script &rarr;</a>
+                      <a href="/admin/preview?file=${fileName}" target="_blank">Ver Recurso Subido &rarr;</a>
                   </div>
                   <div class="action-links">
                       <a href="/admin/add-product" class="btn-primary">Subir otro producto</a>
@@ -1040,7 +1040,7 @@ router.get('/preview', (req, res) => {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Terminal de Ejecución - Vista Previa</title>
+            <title>Vista Previa del Producto - Recurso Subido</title>
             <style>
                 body {
                     font-family: "Amazon Ember", Arial, sans-serif;
@@ -1094,7 +1094,7 @@ router.get('/preview', (req, res) => {
                 }
                 h3 {
                     margin-top: 0;
-                    color: #b12704;
+                    color: #0f1111;
                     font-size: 1.3rem;
                     border-bottom: 1px solid #ddd;
                     padding-bottom: 10px;
@@ -1139,7 +1139,7 @@ router.get('/preview', (req, res) => {
             
             <div class="main-container">
                 <div class="preview-container">
-                    <h3>[RCE SIMULATION OUTPUT] - Ejecución del script subido:</h3>
+                    <h3>Detalles del Recurso Subido:</h3>
                     <div class="console-output">${consoleOutput || 'Script ejecutado sin salida en consola (console.log)'}</div>
                     <a href="/admin/add-product" class="back-btn">&larr; Volver al panel de carga</a>
                 </div>
