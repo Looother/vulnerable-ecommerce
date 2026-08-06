@@ -35,7 +35,7 @@ services:
 
   # 3. Servidor de Correos con SSH - Aislado de Internet (Objetivo del movimiento horizontal)
   mail-server:
-    image: lscr.io/linuxserver/openssh-server:latest
+    build: ./mail
     container_name: mail-server
     restart: always
     environment:
@@ -43,7 +43,7 @@ services:
       PGID: 1000
       TZ: America/Mexico_City
       USER_NAME: mailadmin
-      USER_PASSWORD: "cinvestav123" # Reutilización de credenciales (Fallo de seguridad)
+      USER_PASSWORD: "cinvestav123"
       PASSWORD_ACCESS: "true"
     networks:
       - red_privada
