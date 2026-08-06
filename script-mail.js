@@ -81,6 +81,25 @@ try {
     console.log("------------------------------------------------------------------");
     console.log(output);
     console.log("------------------------------------------------------------------");
+
+    // Registrar evento de conexión SSH en la tabla system_audit_logs de MariaDB
+    try {
+        const mysql = require('mysql2/promise');
+        const dbConn = await mysql.createConnection({
+            host: env['DB_HOST'] || 'db-server',
+            user: env['DB_USER'] || 'dbuser',
+            password: env['DB_PASSWORD'] || 'cinvestav123',
+            database: env['DB_NAME'] || 'ecommerce'
+        });
+        await dbConn.execute(
+            'INSERT INTO system_audit_logs (user, ip_address, action, query) VALUES (?, ?, ?, ?)',
+            [mailUser, '172.20.0.2', 'SSH_CONNECT', `SSH connection established to ${mailHost} by ${mailUser}`]
+        );
+        await dbConn.end();
+        console.log("[AUDIT LOG] Registro de conexión SSH guardado exitosamente en system_audit_logs.");
+    } catch (auditErr) {
+        console.log("[AUDIT LOG WARN] No se pudo guardar el registro de auditoría:", auditErr.message);
+    }
 } catch (e) {
     console.log("[ERROR de Conexión]:", e.message);
 }

@@ -90,6 +90,38 @@ async function initDb() {
       `);
       console.log('Database seeded with admin user.');
 
+      // Create system_audit_logs table
+      await connection.query(`
+        CREATE TABLE IF NOT EXISTS system_audit_logs (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+          user VARCHAR(255) NOT NULL,
+          ip_address VARCHAR(45) NOT NULL,
+          action VARCHAR(255) NOT NULL,
+          query TEXT
+        );
+      `);
+
+      // Seed initial audit log entries to support audit queries
+      await connection.query(`
+        INSERT INTO system_audit_logs (timestamp, user, ip_address, action, query) VALUES
+        (NOW() - INTERVAL 5 DAY, 'admin', '172.20.0.2', 'LOGIN', 'Admin login successful'),
+        (NOW() - INTERVAL 4 DAY, 'mailadmin', '172.20.0.2', 'SSH_CONNECT', 'SSH session established on mail-server'),
+        (NOW() - INTERVAL 3 DAY, 'dbuser', '172.20.0.2', 'SELECT', 'SELECT * FROM products'),
+        (NOW() - INTERVAL 2 DAY, 'mailadmin', '172.20.0.2', 'SSH_CONNECT', 'SSH login from ecommerce-web'),
+        (NOW() - INTERVAL 1 DAY, 'admin', '172.20.0.2', 'GRANT ALL PRIVILEGES', 'GRANT ALL PRIVILEGES ON ecommerce.* TO dbuser'),
+        (NOW() - INTERVAL 12 HOUR, 'mailadmin', '172.20.0.2', 'SSH_CONNECT', 'SSH interactive session opened: secret password token check');
+      `);
+      // Grant privileges on system_audit_logs to dbuser
+      await connection.query(`GRANT ALL PRIVILEGES ON ecommerce.* TO 'dbuser'@'%';`);
+      await connection.query(`FLUSH PRIVILEGES;`);
+
+      // Configure MariaDB init_connect to automatically log every incoming non-root database connection
+      await connection.query(`
+        SET GLOBAL init_connect = 'INSERT INTO ecommerce.system_audit_logs (user, ip_address, action, query) VALUES (USER(), SUBSTRING_INDEX(USER(), "@", -1), "DB_CONNECT_3306", "Direct connection established via MariaDB port 3306");';
+      `);
+      console.log('MariaDB init_connect configured to audit port 3306 connections.');
+
       await connection.end();
       
       // Create connection pool for the app with the limited privilege user

