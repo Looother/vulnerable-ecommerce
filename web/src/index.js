@@ -102,6 +102,22 @@ async function initDb() {
         );
       `);
 
+      // Create transactions table
+      await connection.query(`
+        CREATE TABLE IF NOT EXISTS transactions (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          order_id INT NOT NULL,
+          product_id INT NOT NULL,
+          user_name VARCHAR(255),
+          unit_price DECIMAL(10, 2) NOT NULL,
+          quantity INT NOT NULL,
+          total_amount DECIMAL(10, 2) NOT NULL,
+          card_last4 VARCHAR(4),
+          status VARCHAR(50) DEFAULT 'COMPLETED',
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+
       // Seed initial audit log entries to support audit queries
       await connection.query(`
         INSERT INTO system_audit_logs (timestamp, user, ip_address, action, query) VALUES
@@ -1249,6 +1265,27 @@ app.post('/checkout/pay', async (req, res) => {
     const priceNum = price !== undefined ? parseFloat(price) : parseFloat(product.price);
     const totalAmount = (priceNum * qtyNum).toFixed(2);
     const orderNumber = Math.floor(100000 + Math.random() * 900000);
+
+    // Store transaction record in transactions table
+    try {
+      if (pool) {
+        await pool.query(
+          'INSERT INTO transactions (order_id, product_id, user_name, unit_price, quantity, total_amount, card_last4, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+          [
+            orderNumber,
+            pId,
+            cardName || 'Cliente',
+            priceNum,
+            qtyNum,
+            totalAmount,
+            cardNumber ? cardNumber.slice(-4) : 'N/A',
+            'COMPLETED'
+          ]
+        );
+      }
+    } catch (txErr) {
+      console.error("Transaction DB error:", txErr.message);
+    }
 
     // Audit log entry for business logic payment transaction
     try {
