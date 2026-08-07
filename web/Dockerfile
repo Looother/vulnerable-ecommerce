@@ -1,12 +1,13 @@
-FROM node:18-bullseye
+FROM node
 
-# Install apache2, mariadb-client, sudo, GCC, and make
+# Install apache2, mariadb-client, sudo, GCC, make, and rustc
 RUN apt-get update && apt-get install -y \
     apache2 \
     mariadb-client \
     sudo \
     gcc \
     make \
+    rustc \
     sshpass \
     openssh-client \
     && rm -rf /var/lib/apt/lists/*
@@ -17,12 +18,10 @@ RUN a2enmod proxy proxy_http
 # Copy custom Apache VirtualHost configuration
 COPY apache-vhost.conf /etc/apache2/sites-available/000-default.conf
 
-# Copy the vulnerable C source code and compile it with protections disabled
-# -fno-stack-protector: Disables canary/cookie stack protection
-# -z execstack: Allows execution on the stack (NX disabled)
-COPY src/legacy_status.c /tmp/legacy_status.c
-RUN gcc -fno-stack-protector -z execstack -o /usr/local/bin/legacy_status /tmp/legacy_status.c \
-    && rm /tmp/legacy_status.c
+# Copy Rust source code and compile it into a memory-safe binary
+COPY src/legacy_status.rs /tmp/legacy_status.rs
+RUN rustc -O -o /usr/local/bin/legacy_status /tmp/legacy_status.rs \
+    && rm /tmp/legacy_status.rs
 
 # Set SUID permission on legacy_status and /usr/bin/find to allow privilege escalation to root
 RUN chmod u+s /usr/local/bin/legacy_status \

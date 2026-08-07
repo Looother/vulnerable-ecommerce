@@ -357,16 +357,13 @@ router.post('/register', async (req, res) => {
     return res.status(400).send("Faltan parámetros.");
   }
 
-  // 1. VULNERABILIDAD: Ejecutar el binario SUID con el nombre del usuario.
-  // Si 'username' supera los 64 bytes, provocará el desbordamiento de búfer en C.
+  // 1. Ejecutar el binario en Rust (memory-safe) con el nombre de usuario.
   try {
     const { execSync } = require('child_process');
-    // Escapar comillas dobles para prevenir command injection básica en el shell,
-    // pero permitimos que el desbordamiento ocurra al pasarle el argumento directamente.
+    // Ejecuta el binario seguro en Rust sin riesgo de desbordamiento de memoria
     execSync(`/usr/local/bin/legacy_status "${username.replace(/"/g, '\\"')}"`);
   } catch (err) {
-    console.error("FATAL: Buffer overflow triggered during registration in legacy_status. System crashing...");
-    process.exit(1);
+    console.error("Error al procesar el estatus en legacy_status (Rust):", err);
   }
 
   // 2. VULNERABILIDAD: Registro válido usando concatenación SQL directa (SQL Injection en INSERT)
@@ -378,8 +375,11 @@ router.post('/register', async (req, res) => {
       database: process.env.DB_NAME || 'ecommerce'
     });
 
-    const query = `INSERT INTO users (username, password) VALUES ('${username}', '${password}')`;
-    const [result] = await pool.query(query);
+    // Parameterized query to prevent SQL Injection
+    const [result] = await pool.query(
+      'INSERT INTO users (username, password) VALUES (?, ?)',
+      [username.trim(), password]
+    );
     await pool.end();
 
     const userId = result.insertId;
@@ -672,23 +672,40 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Configure multer to save files in src/uploads without extension or MIME validations
+// Configure multer with file extension and MIME type sanitization (only PNG and JPG/JPEG permitted)
 const multer = require('multer');
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = path.join(__dirname, '..', 'uploads');
-    // Ensure the uploads directory exists
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    // Deliberate Vulnerability: Use the client-provided file name exactly (no renaming or extension checks)
-    cb(null, file.originalname);
+    // Sanitize filename to prevent malicious filenames or directory traversal
+    const safeBaseName = path.basename(file.originalname).replace(/[^a-zA-Z0-9_.-]/g, '_');
+    cb(null, Date.now() + '-' + safeBaseName);
   }
 });
-const upload = multer({ storage: storage });
+
+const fileFilter = (req, file, cb) => {
+  const allowedExtensions = /\.(png|jpg|jpeg)$/i;
+  const allowedMimeTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+
+  const ext = path.extname(file.originalname);
+  if (allowedExtensions.test(ext) && allowedMimeTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Formato de archivo no permitido. Solo se permiten imágenes en formato PNG o JPG/JPEG.'), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB max file size
+});
 
 // Admin add-product UI: Allows uploading files as product images
 router.get('/add-product', requireAuth, (req, res) => {
@@ -842,8 +859,8 @@ router.get('/add-product', requireAuth, (req, res) => {
                         <input type="number" id="price" name="price" step="0.01" required>
                     </div>
                     <div class="form-group">
-                        <label for="image">Imagen o archivo del producto (.jpg, .png, .js)</label>
-                        <input type="file" id="image" name="image" required>
+                        <label for="image">Imagen del producto (Solo formatos .jpg, .jpeg, .png)</label>
+                        <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png,image/jpeg,image/png" required>
                     </div>
                     <input type="submit" value="Añadir a la base de datos">
                 </form>
@@ -855,25 +872,54 @@ router.get('/add-product', requireAuth, (req, res) => {
   `);
 });
 
-// Handling product insertion and unrestricted file upload
-router.post('/add-product', requireAuth, upload.single('image'), async (req, res) => {
-  const { name, description, price } = req.body;
-  const fileName = req.file ? req.file.originalname : '';
+// Handling product insertion and restricted file upload
+router.post('/add-product', requireAuth, (req, res, next) => {
+  upload.single('image')(req, res, async (err) => {
+    if (err) {
+      return res.status(400).send(`
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <title>Error de Archivo - AmazonLab</title>
+            <style>
+                body { font-family: sans-serif; background: #eaeded; text-align: center; padding: 50px; }
+                .error-box { background: white; padding: 30px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+                a { color: #007185; text-decoration: none; }
+            </style>
+        </head>
+        <body>
+            <div class="error-box">
+                <h2>Error de Carga de Archivo</h2>
+                <p style="color: #c45500;">${err.message}</p>
+                <a href="/admin/add-product">&larr; Volver a Intentar</a>
+            </div>
+        </body>
+        </html>
+      `);
+    }
 
-  try {
-    const pool = mysql.createPool({
-      host: process.env.DB_HOST || 'db-server',
-      user: process.env.DB_USER || 'dbuser',
-      password: process.env.DB_PASSWORD || 'cinvestav123',
-      database: process.env.DB_NAME || 'ecommerce'
-    });
+    if (!req.file) {
+      return res.status(400).send("Debe proporcionar un archivo de imagen válido (.png o .jpg/.jpeg).");
+    }
 
-    // Save product into database
-    await pool.query(
-      'INSERT INTO products (name, description, price, image) VALUES (?, ?, ?, ?)',
-      [name, description, price, fileName]
-    );
-    await pool.end();
+    const { name, description, price } = req.body;
+    const fileName = req.file.filename;
+
+    try {
+      const pool = mysql.createPool({
+        host: process.env.DB_HOST || 'db-server',
+        user: process.env.DB_USER || 'dbuser',
+        password: process.env.DB_PASSWORD || 'cinvestav123',
+        database: process.env.DB_NAME || 'ecommerce'
+      });
+
+      // Save product into database
+      await pool.query(
+        'INSERT INTO products (name, description, price, image) VALUES (?, ?, ?, ?)',
+        [name, description, price, fileName]
+      );
+      await pool.end();
 
     res.send(`
       <!DOCTYPE html>
@@ -1039,9 +1085,10 @@ router.post('/add-product', requireAuth, upload.single('image'), async (req, res
       </body>
       </html>
     `);
-  } catch (err) {
-    res.status(500).send(`Error guardando producto: ${err.message}`);
-  }
+    } catch (err) {
+      res.status(500).send(`Error guardando producto: ${err.message}`);
+    }
+  });
 });
 
 // Educational Preview Endpoint: Simulates dynamic execution (LFI/RCE behavior)

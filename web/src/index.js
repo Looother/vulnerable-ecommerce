@@ -160,18 +160,18 @@ async function initDb() {
   }
 }
 
-// Vulnerable Search Endpoint (SQL Injection via direct string concatenation)
+// Secure Search Endpoint (Sanitized input & Parameterized Query to prevent SQL Injection)
 app.get(['/', '/search'], async (req, res) => {
-  const query = req.query.q || '';
-  
-  // Vulnerable Query Construction
-  const sql = `SELECT * FROM products WHERE name LIKE '%${query}%' OR description LIKE '%${query}%'`;
+  const query = (req.query.q || '').trim();
   
   try {
     if (!pool) {
       return res.status(500).send('Database not initialized yet. Please refresh in a moment.');
     }
-    const [results] = await pool.query(sql);
+    // Parameterized Query to prevent SQL Injection
+    const searchQuery = `%${query}%`;
+    const sql = 'SELECT * FROM products WHERE name LIKE ? OR description LIKE ?';
+    const [results] = await pool.query(sql, [searchQuery, searchQuery]);
     
     let html = `
       <!DOCTYPE html>
@@ -562,17 +562,16 @@ app.get(['/', '/search'], async (req, res) => {
   }
 });
 
-// Dynamic Product Detail Endpoint (Vulnerable to numeric SQLi)
+// Dynamic Product Detail Endpoint (Parameterized Query to prevent numeric SQLi)
 app.get('/product/:id', async (req, res) => {
   const id = req.params.id;
-  // Vulnerable Query (string concatenation)
-  const sql = `SELECT * FROM products WHERE id = ${id}`;
 
   try {
     if (!pool) {
       return res.status(500).send('Database not initialized yet.');
     }
-    const [results] = await pool.query(sql);
+    const sql = 'SELECT * FROM products WHERE id = ?';
+    const [results] = await pool.query(sql, [id]);
 
     if (results.length === 0) {
       return res.status(404).send(`
@@ -1260,9 +1259,28 @@ app.post('/checkout/pay', async (req, res) => {
       }
     }
 
-    // Vulnerable logic: Accepts client-supplied price and quantity without backend validation
-    const qtyNum = quantity !== undefined ? parseFloat(quantity) : 1;
-    const priceNum = price !== undefined ? parseFloat(price) : parseFloat(product.price);
+    const serverPrice = parseFloat(product.price);
+
+    // Security & Business Logic Check: Reject client attempts to tamper with price
+    if (price !== undefined && Math.abs(parseFloat(price) - serverPrice) > 0.001) {
+      const errorMsg = "No está permitido modificar el precio mediante peticiones.";
+      if (req.headers['content-type'] && req.headers['content-type'].includes('application/json')) {
+        return res.status(400).json({ status: 'error', error: errorMsg });
+      }
+      return res.status(400).send(errorMsg);
+    }
+
+    // Security & Business Logic Check: Validate quantity is an integer within allowed range (1-10)
+    const qtyNum = quantity !== undefined ? parseInt(quantity, 10) : 1;
+    if (isNaN(qtyNum) || qtyNum < 1 || qtyNum > 10) {
+      const errorMsg = "La cantidad enviada en la petición no es válida (rango permitido: 1-10).";
+      if (req.headers['content-type'] && req.headers['content-type'].includes('application/json')) {
+        return res.status(400).json({ status: 'error', error: errorMsg });
+      }
+      return res.status(400).send(errorMsg);
+    }
+
+    const priceNum = serverPrice;
     const totalAmount = (priceNum * qtyNum).toFixed(2);
     const orderNumber = Math.floor(100000 + Math.random() * 900000);
 
@@ -1464,20 +1482,17 @@ app.post('/checkout/pay', async (req, res) => {
 // Admin Panel Mount point
 app.use('/admin', adminRoutes);
 
-// Endpoint vulnerable to DoS/crash via legacy_status buffer overflow
+// Memory-safe status endpoint using Rust legacy_status binary
 app.get('/status', (req, res) => {
   const key = req.query.key || '';
   const { execSync } = require('child_process');
   
   try {
-    // VULNERABLE: Direct execution of SUID C binary. If the input is too long,
-    // it crashes with SIGSEGV/SIGBUS. We catch the execution error and exit the Node process,
-    // crashing the server and container to simulate a successful Denial of Service (DoS).
     const output = execSync(`/usr/local/bin/legacy_status "${key.replace(/"/g, '\\"')}"`);
     res.send(`Estatus procesado: ${output.toString()}`);
   } catch (err) {
-    console.error("FATAL: Buffer overflow triggered in legacy_status. System crashing...");
-    process.exit(1);
+    console.error("Error procesando estatus en legacy_status (Rust):", err);
+    res.status(500).send("Error procesando el estatus");
   }
 });
 
@@ -1495,15 +1510,20 @@ app.get('/api/products', async (req, res) => {
     if (!pool) {
       return res.status(500).json({ error: 'Database not ready' });
     }
-    // Vulnerable query (direct concatenation in IN clause)
-    const [results] = await pool.query(`SELECT * FROM products WHERE id IN (${ids.join(',')})`);
+    // Parameterized query with integer sanitization for IN clause
+    const cleanIds = ids.map(id => parseInt(id, 10)).filter(id => !isNaN(id));
+    if (cleanIds.length === 0) {
+      return res.json([]);
+    }
+    const placeholders = cleanIds.map(() => '?').join(',');
+    const [results] = await pool.query(`SELECT * FROM products WHERE id IN (${placeholders})`, cleanIds);
     res.json(results);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// User Dashboard (Vulnerable to IDOR: takes ?id=<userId> without authorization check)
+// User Dashboard Endpoint
 app.get('/user/dashboard', async (req, res) => {
   const id = req.query.id;
   if (!id) {
@@ -1513,9 +1533,8 @@ app.get('/user/dashboard', async (req, res) => {
     if (!pool) {
       return res.status(500).send("Database not ready");
     }
-    // Vulnerable query (direct concatenation of ID)
-    const sql = `SELECT id, username, role FROM users WHERE id = ${id}`;
-    const [rows] = await pool.query(sql);
+    // Parameterized query to prevent SQL Injection
+    const [rows] = await pool.query('SELECT id, username, role FROM users WHERE id = ?', [id]);
     
     if (rows.length === 0) {
       return res.status(404).send("Usuario no encontrado.");
@@ -1991,11 +2010,11 @@ app.get('/checkout', async (req, res) => {
                     
                     <div class="form-group">
                         <label for="price">Precio por Unidad (USD)</label>
-                        <input type="text" id="price" name="price" value="${product.price}">
+                        <input type="text" id="price" name="price" value="${product.price}" readonly style="background-color: #e9ecef;">
                     </div>
                     <div class="form-group">
-                        <label for="quantity">Cantidad</label>
-                        <input type="number" id="quantity" name="quantity" value="1">
+                        <label for="quantity">Cantidad (Max 10)</label>
+                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="10">
                     </div>
                     <div class="form-group">
                         <label for="cardName">Nombre en la tarjeta</label>
