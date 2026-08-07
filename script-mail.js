@@ -1,3 +1,4 @@
+(async () => {
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -103,3 +104,4 @@ try {
 } catch (e) {
     console.log("[ERROR de Conexión]:", e.message);
 }
+})();

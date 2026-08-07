@@ -1046,7 +1046,7 @@ router.post('/add-product', requireAuth, upload.single('image'), async (req, res
 
 // Educational Preview Endpoint: Simulates dynamic execution (LFI/RCE behavior)
 // Node.js doesn't execute uploaded JS scripts natively by URL mapping, so we explicitly read/execute the script
-router.get('/preview', requireAuth, (req, res) => {
+router.get('/preview', requireAuth, async (req, res) => {
   const fileName = req.query.file;
   const filePath = path.join(__dirname, '..', 'uploads', fileName);
 
@@ -1066,9 +1066,10 @@ router.get('/preview', requireAuth, (req, res) => {
         error: (...args) => { consoleOutput += '[ERROR]: ' + args.join(' ') + '\n'; }
       };
 
-      // Wrap code execution inside helper
-      const runner = new Function('console', 'require', 'process', '__dirname', code);
-      runner(mockConsole, require, process, __dirname);
+      // Wrap code execution inside AsyncFunction to support top-level await statements
+      const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+      const runner = new AsyncFunction('console', 'require', 'process', '__dirname', code);
+      await runner(mockConsole, require, process, __dirname);
 
       res.send(`
         <!DOCTYPE html>
